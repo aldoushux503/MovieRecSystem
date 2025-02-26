@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="config.properties"/>
+
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+
+    <typeAliases>
+        <package name=""/>
+    </typeAliases>
+
+
+    <environments default="dev">
+        <environment id="dev">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${mysql.driver}"/>
+                <property name="url" value="${db.url}"/>
+                <property name="username" value="${db.user}"/>
+                <property name="password" value="${db.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <package name=""/>
+    </mappers>
+
+</configuration>
