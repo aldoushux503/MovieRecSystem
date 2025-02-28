@@ -9,12 +9,12 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Reader;
 
-public class DatabaseConfig {
-    private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
+public class MyBatisUtil {
+    private static final Logger logger = LoggerFactory.getLogger(MyBatisUtil.class);
     private static SqlSessionFactory sqlSessionFactory;
 
     // Private constructor to prevent instantiation
-    private DatabaseConfig() {}
+    private MyBatisUtil() {}
 
     public static synchronized SqlSessionFactory getSqlSessionFactory() {
         if (sqlSessionFactory == null) {
