@@ -1,0 +1,32 @@
+<mapper namespace="org.solvd.recommendation.mapper.IMovieMapper">
+    <resultMap id="MovieResultMap" type="org.solvd.recommendation.model.Movie">
+        <id property="movieId" column="movie_id"/>
+        <result property="title" column="title"/>
+        <result property="duration" column="duration"/>
+        <result property="averageRating" column="average_rating"/>
+    </resultMap>
+
+    <select id="get" resultMap="MovieResultMap">
+        SELECT * FROM Movie WHERE movie_id = #{id}
+    </select>
+
+
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="movieId">
+        INSERT INTO Movie (title, duration, average_rating) VALUES (#{title}, #{duration}, #{averageRating})
+    </insert>
+
+    <update id="update">
+        UPDATE Movie SET title = #{title}, duration = #{duration}, average_rating = #{averageRating}
+        WHERE movie_id = #{movieId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM Movie WHERE movie_id = #{id}
+    </delete>
+
+    <select id="getAll" resultMap="MovieResultMap">
+        SELECT * FROM Movie
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<mapper namespace="org.solvd.recommendation.mapper.IUserRatingMapper">
+    <resultMap id="UserRatingResultMap" type="org.solvd.recommendation.model.UserRating">
+        <id property="movieId" column="movie_id"/>
+        <id property="userId" column="user_id"/>
+        <result property="rating" column="rating_value"/>
+    </resultMap>
+
+    <select id="get" resultMap="ViewingHistoryResultMap">
+        SELECT * FROM UserRating WHERE movie_id = #{movieId} AND user_id = #{userId}
+    </select>
+
+    <update id="update">
+        UPDATE UserRating SET rating_value = #{rating} WHERE movie_id =#{movieId} AND user_id = #{userId}
+    </update>
+
+    <insert id="save">
+        INSERT INTO UserRating (movie_id,user_id, rating_value) VALUES (#{userId}, #{movieId}, #{rating})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM UserRating WHERE user_id = #{userId} AND movie_id = #{movieId}
+    </delete>
+
+    <select id="getAll" resultMap="UserRatingResultMap">
+        SELECT * FROM UserRating
+    </select>
+</mapper>
