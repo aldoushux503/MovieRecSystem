@@ -8,6 +8,6 @@ import java.sql.SQLException;
 
 @Mapper
 public interface IContentContributorMapper extends IMapper<ContentContributor> {
-    ContentContributor get(@Param("movieId") long movieId, @Param("personId") long personId, @Param("personRole") int personRole) throws SQLException;
+    ContentContributor get(@Param("movieId") long movieId, @Param("personId") long personId, @Param("personRole") long personRole) throws SQLException;
 
 }
