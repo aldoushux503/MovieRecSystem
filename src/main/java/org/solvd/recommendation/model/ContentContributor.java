@@ -2,11 +2,8 @@ package org.solvd.recommendation.model;
 
 import lombok.*;
 
+@Data
 @Builder
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentContributor {

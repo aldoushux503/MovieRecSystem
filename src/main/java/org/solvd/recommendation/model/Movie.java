@@ -2,16 +2,15 @@ package org.solvd.recommendation.model;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
+@Data
 @Builder
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class Movie {
     private Long movieId;
     private String title;
     private Integer duration;
-    private Double averageRating;
+    private BigDecimal averageRating;
 }
