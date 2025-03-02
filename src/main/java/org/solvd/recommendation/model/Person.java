@@ -1,9 +1,10 @@
 package org.solvd.recommendation.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Person {
