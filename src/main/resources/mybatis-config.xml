@@ -30,7 +30,7 @@
     </environments>
 
     <mappers>
-        <package name=""/>
+        <package name="src/main/resources/mapper"/>
     </mappers>
 
 </configuration>

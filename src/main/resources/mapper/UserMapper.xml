@@ -1,0 +1,29 @@
+<mapper namespace="org.solvd.recommendation.mapper.IUserMapper">
+    <resultMap id="UserResultMap" type="org.solvd.recommendation.model.User">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="email" column="email"/>
+    </resultMap>
+
+    <select id="get" resultMap="UserResultMap">
+        SELECT * FROM User WHERE user_id = #{id}
+    </select>
+
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO User (user_id, username, email) VALUES (#{userId}, #{username}, #{email})
+    </insert>
+
+    <update id="update">
+        UPDATE User SET username = #{username}, email = #{email} WHERE user_id = #{userId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM User WHERE user_id = #{id}
+    </delete>
+
+    <select id="getAll" resultMap="UserResultMap">
+        SELECT * FROM User
+    </select>
+
+</mapper>

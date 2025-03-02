@@ -1,0 +1,25 @@
+<mapper namespace="org.solvd.recommendation.mapper.IUserPreferredGenreMapper">
+    <resultMap id="UserPreferredGenreResultMap" type="org.solvd.recommendation.model.UserPreferredGenre">
+        <id property="userId" column="User_user_id"/>
+        <id property="genreId" column="Genre_genre_id"/>
+    </resultMap>
+
+    <select id="get" resultMap="UserPreferredGenreResultMap">
+        SELECT * FROM UserPreferredGenres WHERE User_user_id = #{userId} AND Genre_genre_id = #{genreId}
+    </select>
+
+
+
+    <insert id="save">
+        INSERT INTO UserPreferredGenres (User_user_id, Genre_genre_id) VALUES (#{userId}, #{genreId})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM UserPreferredGenres WHERE User_user_id = #{userId} AND Genre_genre_id = #{genreId}
+    </delete>
+
+    <select id="getAll" resultMap="UserPreferredGenreResultMap">
+        SELECT * FROM UserPreferredGenres
+    </select>
+
+</mapper>
