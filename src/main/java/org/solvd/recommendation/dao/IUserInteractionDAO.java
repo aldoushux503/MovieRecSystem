@@ -1,10 +1,10 @@
 package org.solvd.recommendation.dao;
 
 import org.solvd.recommendation.model.UserInteraction;
+import org.solvd.recommendation.util.CompositeKey3;
 
 import java.sql.SQLException;
 
-public interface IUserInteractionDAO extends IDAO<UserInteraction> {
 
-    UserInteraction get(long movieId, long userId, long interactionId) throws SQLException;
+public interface IUserInteractionDAO extends IDAO<UserInteraction, CompositeKey3<Long, Long, Long>> {
 }

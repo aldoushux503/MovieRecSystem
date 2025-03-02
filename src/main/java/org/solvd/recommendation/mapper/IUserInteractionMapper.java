@@ -9,5 +9,6 @@ import java.sql.SQLException;
 @Mapper
 public interface IUserInteractionMapper extends IMapper<UserInteraction> {
     UserInteraction get(@Param("movieId") long movieId,@Param("userId") long userId, @Param("interactionId") long interactionId) throws SQLException;
+    boolean delete(@Param("movieId") long movieId,@Param("userId") long userId, @Param("interactionId") long interactionId) throws SQLException;
 
 }

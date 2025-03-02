@@ -9,5 +9,6 @@ import java.sql.SQLException;
 @Mapper
 public interface IMovieGenreMapper extends IMapper<MovieGenre> {
     MovieGenre get(@Param("movieId") long movieId,@Param("genreId") long genreId) throws SQLException;
+    boolean delete(@Param("movieId") long movieId,@Param("genreId") long genreId) throws SQLException;
 
 }
