@@ -1,5 +1,6 @@
-package org.solvd.recommendation.algorithm;
+package org.solvd.recommendation.algorithm.simularity;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 
@@ -8,5 +9,5 @@ import java.util.Map;
  * This interface enables pluggable similarity calculation methods to support flexible recommendation algorithms.
  */
 public interface SimilarityCalculator {
-    double calculateSimilarity(Map<Long, Double> vector1, Map<Long, Double> vector2);
+    double calculateSimilarity(Map<Long, BigDecimal> vector1, Map<Long, BigDecimal> vector2);
 }

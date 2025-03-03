@@ -1,4 +1,4 @@
-package org.solvd.recommendation.algorithm;
+package org.solvd.recommendation.algorithm.simularity;
 
 
 /**
@@ -8,12 +8,6 @@ package org.solvd.recommendation.algorithm;
  */
 public class SimilarityCalculatorFactory {
 
-    /**
-     * Enum representing available similarity calculation methods.
-     */
-    public enum SimilarityMethod {
-        COSINE, PEARSON
-    }
 
     public static SimilarityCalculator createCalculator(SimilarityMethod method) {
         return switch (method) {

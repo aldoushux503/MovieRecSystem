@@ -1,6 +1,5 @@
 package org.solvd.recommendation.service;
 
-import org.solvd.recommendation.algorithm.SimilarityCalculatorFactory;
 import org.solvd.recommendation.dao.DAOFactory;
 
 /**
