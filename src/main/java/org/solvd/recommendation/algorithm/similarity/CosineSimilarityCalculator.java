@@ -21,7 +21,7 @@ import java.util.Set;
  * - Magnitude2 = sqrt(5² + 1²) ≈ 5.1
  * - Similarity = 23 / (5 * 5.1) ≈ 0.9
  */
-public class CosineSimilarityCalculator implements SimilarityCalculator {
+public class CosineSimilarityCalculator implements ISimilarityCalculator {
     private static final Logger logger = LoggerFactory.getLogger(CosineSimilarityCalculator.class);
 
     @Override

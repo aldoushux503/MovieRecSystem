@@ -24,7 +24,7 @@ import java.util.Set;
  * - Denominator = sqrt(1² + (-1)²) * sqrt(2² + (-2)²) ≈ 4
  * - Correlation = 4 / 4 = 1
  */
-public class PearsonCorrelationCalculator implements SimilarityCalculator {
+public class PearsonCorrelationCalculator implements ISimilarityCalculator {
     private static final Logger logger = LoggerFactory.getLogger(PearsonCorrelationCalculator.class);
 
     @Override
