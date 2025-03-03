@@ -1,5 +1,9 @@
-<mapper namespace="org.solvd.recommendation.mapper.IMovieGenreMapper">
-    <resultMap id="MovieGenresResultMap" type="org.solvd.recommendation.model.MovieGenre">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.solvd.recommendation.mapper.IMovieGenresMapper">
+    <resultMap id="MovieGenresResultMap" type="org.solvd.recommendation.model.MovieGenres">
         <id property="movieId" column="movie_id"/>
         <id property="genreId" column="genre_id"/>
     </resultMap>

@@ -1,32 +1,32 @@
 package org.solvd.recommendation.dao.mybatis;
 
 import org.apache.ibatis.session.SqlSession;
-import org.solvd.recommendation.dao.IMovieGenreDAO;
+import org.solvd.recommendation.dao.IMovieGenresDAO;
 import org.solvd.recommendation.exeption.*;
-import org.solvd.recommendation.mapper.IMovieGenreMapper;
-import org.solvd.recommendation.model.MovieGenre;
+import org.solvd.recommendation.mapper.IMovieGenresMapper;
+import org.solvd.recommendation.model.MovieGenres;
 import org.solvd.recommendation.util.CompositeKey2;
 
 
-public class MovieGenresMyBatisDAO extends AbstractMyBatisDAO<MovieGenre, CompositeKey2<Long, Long>, IMovieGenreMapper> implements IMovieGenreDAO {
+public class MovieGenresMyBatisDAO extends AbstractMyBatisDAO<MovieGenres, CompositeKey2<Long, Long>, IMovieGenresMapper> implements IMovieGenresDAO {
 
     public MovieGenresMyBatisDAO() {
-        super(MovieGenre.class);
+        super(MovieGenres.class);
     }
 
     @Override
-    protected Class<IMovieGenreMapper> getMapperClass() {
-        return IMovieGenreMapper.class;
+    protected Class<IMovieGenresMapper> getMapperClass() {
+        return IMovieGenresMapper.class;
     }
 
     @Override
-    public MovieGenre get(CompositeKey2<Long, Long> id) {
+    public MovieGenres get(CompositeKey2<Long, Long> id) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
-            IMovieGenreMapper mapper = session.getMapper(getMapperClass());
-            MovieGenre entity = mapper.get(id.getKey1(), id.getKey2());
+            IMovieGenresMapper mapper = session.getMapper(getMapperClass());
+            MovieGenres entity = mapper.get(id.getKey1(), id.getKey2());
 
             if (entity == null) {
-                throw new EntityNotFoundException(MovieGenre.class, id.toString());
+                throw new EntityNotFoundException(MovieGenres.class, id.toString());
             }
 
             return entity;
@@ -38,10 +38,10 @@ public class MovieGenresMyBatisDAO extends AbstractMyBatisDAO<MovieGenre, Compos
     }
 
     @Override
-    public CompositeKey2<Long, Long> save(MovieGenre entity) {
+    public CompositeKey2<Long, Long> save(MovieGenres entity) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             try {
-                IMovieGenreMapper mapper = session.getMapper(getMapperClass());
+                IMovieGenresMapper mapper = session.getMapper(getMapperClass());
                 mapper.save(entity);
                 session.commit();
                 return createCompositeKey(entity);
@@ -55,10 +55,10 @@ public class MovieGenresMyBatisDAO extends AbstractMyBatisDAO<MovieGenre, Compos
     }
 
     @Override
-    public void update(MovieGenre entity) {
+    public void update(MovieGenres entity) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             try {
-                IMovieGenreMapper mapper = session.getMapper(getMapperClass());
+                IMovieGenresMapper mapper = session.getMapper(getMapperClass());
                 mapper.update(entity);
                 session.commit();
             } catch (Exception e) {
@@ -71,15 +71,15 @@ public class MovieGenresMyBatisDAO extends AbstractMyBatisDAO<MovieGenre, Compos
     }
 
     @Override
-    public void delete(MovieGenre entity) {
+    public void delete(MovieGenres entity) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             try {
-                IMovieGenreMapper mapper = session.getMapper(getMapperClass());
+                IMovieGenresMapper mapper = session.getMapper(getMapperClass());
                 CompositeKey2<Long, Long> id = createCompositeKey(entity);
                 boolean result = mapper.delete(id.getKey1(), id.getKey2());
 
                 if (!result) {
-                    throw new EntityNotFoundException(MovieGenre.class, id.toString());
+                    throw new EntityNotFoundException(MovieGenres.class, id.toString());
                 }
 
                 session.commit();
@@ -94,7 +94,7 @@ public class MovieGenresMyBatisDAO extends AbstractMyBatisDAO<MovieGenre, Compos
         }
     }
 
-    private CompositeKey2<Long, Long> createCompositeKey(MovieGenre entity) {
+    private CompositeKey2<Long, Long> createCompositeKey(MovieGenres entity) {
         if (entity == null || entity.getMovieId() == null || entity.getGenreId() == null) {
             throw new IllegalArgumentException("MovieGenre has incomplete key values");
         }
@@ -102,7 +102,7 @@ public class MovieGenresMyBatisDAO extends AbstractMyBatisDAO<MovieGenre, Compos
     }
 
     @Override
-    protected Long getEntityId(MovieGenre entity) {
+    protected Long getEntityId(MovieGenres entity) {
         throw new UnsupportedOperationException("MovieGenre uses composite key");
     }
 }

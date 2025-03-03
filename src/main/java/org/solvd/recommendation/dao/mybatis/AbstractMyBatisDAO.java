@@ -57,7 +57,7 @@ public abstract class AbstractMyBatisDAO<T, ID, M extends IMapper<T>> implements
                 M mapper = session.getMapper(getMapperClass());
                 long id = mapper.save(entity);
                 session.commit();
-                return (ID) Long.valueOf(id);
+                return (ID) getEntityId(entity);
             } catch (Exception e) {
                 session.rollback();
                 throw e;

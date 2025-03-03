@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.solvd.recommendation.mapper.IViewingHistoryMapper">
 
     <resultMap id="ViewingHistoryResultMap" type="org.solvd.recommendation.model.ViewingHistory">
@@ -11,8 +15,8 @@
     </select>
 
     <insert id="save">
-        INSERT INTO ViewingHistory (user_id, movie_id, view_date)
-        VALUES (#{userId}, #{movieId}, #{viewDate})
+        INSERT INTO ViewingHistory (user_id, movie_id, watch_date)
+        VALUES (#{userId}, #{movieId}, #{watchDate})
     </insert>
 
     <update id="update">

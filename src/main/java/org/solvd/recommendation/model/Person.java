@@ -10,5 +10,5 @@ import lombok.experimental.SuperBuilder;
 public class Person {
     private Long personId;
     private String fullName;
-    private String email;
+    private String gender;
 }

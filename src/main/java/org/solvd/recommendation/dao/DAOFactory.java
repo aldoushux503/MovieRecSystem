@@ -87,11 +87,11 @@ public class DAOFactory {
         };
     }
 
-    public static IMovieGenreDAO getMovieGenreDAO() {
+    public static IMovieGenresDAO getMovieGenreDAO() {
         return getMovieGenreDAO(DEFAULT_DAO_TYPE);
     }
 
-    public static IMovieGenreDAO getMovieGenreDAO(DAOType type) {
+    public static IMovieGenresDAO getMovieGenreDAO(DAOType type) {
         return switch (type) {
             case MYBATIS -> new MovieGenresMyBatisDAO();
             default -> throw new IllegalArgumentException("Unsupported DAO type: " + type);

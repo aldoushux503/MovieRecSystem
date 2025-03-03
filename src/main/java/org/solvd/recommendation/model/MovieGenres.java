@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieGenre {
+public class MovieGenres {
     private Long movieId;
     private Long genreId;
 }

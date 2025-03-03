@@ -13,7 +13,7 @@
 
 
     <typeAliases>
-        <package name=""/>
+        <package name="org.solvd.recommendation.model"/>
     </typeAliases>
 
 
@@ -30,7 +30,18 @@
     </environments>
 
     <mappers>
-        <package name="src/main/resources/mapper"/>
+        <mapper resource="mapper/GenreMapper.xml"/>
+        <mapper resource="mapper/MovieMapper.xml"/>
+        <mapper resource="mapper/PersonMapper.xml"/>
+        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/MovieGenreMapper.xml"/>
+        <mapper resource="mapper/ViewingHistoryMapper.xml"/>
+        <mapper resource="mapper/UserRatingMapper.xml"/>
+        <mapper resource="mapper/ContentContributorMapper.xml"/>
+        <mapper resource="mapper/InteractionMapper.xml"/>
+        <mapper resource="mapper/PersonRoleMapper.xml"/>
+        <mapper resource="mapper/UserInteractionMapper.xml"/>
+        <mapper resource="mapper/UserPreferredGenreMapper.xml"/>
     </mappers>
 
 </configuration>
