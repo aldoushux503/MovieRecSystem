@@ -219,8 +219,8 @@ src/main/java/org/solvd/recommendation/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/movie-recommendation-system.git
-   cd movie-recommendation-system
+   git clone https://github.com/aldoushux503/MovieRecSystem.git
+   cd MovieRecSystem
    ```
 
 2. Configure database connection in `src/main/resources/config.properties`:
