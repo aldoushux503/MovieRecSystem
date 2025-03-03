@@ -1,6 +1,7 @@
 package org.solvd.recommendation.service;
 
 import org.solvd.recommendation.dao.DAOFactory;
+import org.solvd.recommendation.service.interfaces.IRecommendationService;
 
 /**
  * Factory for creating service instances.
@@ -9,6 +10,9 @@ import org.solvd.recommendation.dao.DAOFactory;
  */
 public class ServiceFactory {
     private static final ServiceFactory instance = new ServiceFactory();
+
+    // Lazily initialized service instances
+    private IRecommendationService recommendationService;
 
     private ServiceFactory() {
         // Private constructor to enforce Singleton pattern
@@ -66,4 +70,14 @@ public class ServiceFactory {
         return new UserInteractionService(DAOFactory.getUserInteractionDAO());
     }
 
+    /**
+     * Gets the recommendation service instance.
+     * Uses lazy initialization for performance optimization.
+     */
+    public IRecommendationService getRecommendationService() {
+        if (recommendationService == null) {
+            recommendationService = new RecommendationService();
+        }
+        return recommendationService;
+    }
 }

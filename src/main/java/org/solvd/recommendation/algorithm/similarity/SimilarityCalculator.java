@@ -1,4 +1,4 @@
-package org.solvd.recommendation.algorithm.simularity;
+package org.solvd.recommendation.algorithm.similarity;
 
 import java.math.BigDecimal;
 import java.util.Map;

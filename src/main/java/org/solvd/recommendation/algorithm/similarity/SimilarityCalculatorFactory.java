@@ -1,4 +1,4 @@
-package org.solvd.recommendation.algorithm.simularity;
+package org.solvd.recommendation.algorithm.similarity;
 
 
 /**
