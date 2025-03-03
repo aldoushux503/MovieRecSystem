@@ -1,4 +1,4 @@
-package org.solvd.recommendation.algorithm.simularity;
+package org.solvd.recommendation.algorithm.similarity;
 
 
 /**
@@ -9,7 +9,7 @@ package org.solvd.recommendation.algorithm.simularity;
 public class SimilarityCalculatorFactory {
 
 
-    public static SimilarityCalculator createCalculator(SimilarityMethod method) {
+    public static ISimilarityCalculator createCalculator(SimilarityMethod method) {
         return switch (method) {
             case COSINE -> new CosineSimilarityCalculator();
             case PEARSON -> new PearsonCorrelationCalculator();

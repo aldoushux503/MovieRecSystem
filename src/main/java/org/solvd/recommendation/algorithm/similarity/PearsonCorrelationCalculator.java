@@ -1,4 +1,4 @@
-package org.solvd.recommendation.algorithm.simularity;
+package org.solvd.recommendation.algorithm.similarity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,22 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class PearsonCorrelationCalculator implements SimilarityCalculator {
+/**
+ * Implements the Pearson Correlation Coefficient calculation between two vectors.
+ * Measures the linear relationship between two variables by comparing deviations from their
+ * means. Useful for capturing how user ratings correlate relative to their averages.
+ *
+ * Example:
+ * - Vector1: {1: 4, 2: 2}
+ * - Vector2: {1: 5, 2: 1}
+ * - Mean1 = (4 + 2) / 2 = 3
+ * - Mean2 = (5 + 1) / 2 = 3
+ * - Deviations: Vector1: [1, -1], Vector2: [2, -2]
+ * - Numerator = (1 * 2) + (-1 * -2) = 4
+ * - Denominator = sqrt(1² + (-1)²) * sqrt(2² + (-2)²) ≈ 4
+ * - Correlation = 4 / 4 = 1
+ */
+public class PearsonCorrelationCalculator implements ISimilarityCalculator {
     private static final Logger logger = LoggerFactory.getLogger(PearsonCorrelationCalculator.class);
 
     @Override
