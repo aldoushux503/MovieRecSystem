@@ -1,7 +1,7 @@
 package org.solvd.recommendation.service;
 
 import org.solvd.recommendation.dao.DAOFactory;
-import org.solvd.recommendation.service.interfaces.IRecommendationService;
+import org.solvd.recommendation.service.imlp.*;
 
 /**
  * Factory for creating service instances.

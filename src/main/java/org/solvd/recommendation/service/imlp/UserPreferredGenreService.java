@@ -1,4 +1,4 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 import org.solvd.recommendation.dao.IUserPreferredGenreDAO;
 import org.solvd.recommendation.model.UserPreferredGenre;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * UserPreferredGenre service implementation.
  */
 public class UserPreferredGenreService extends AbstractService<UserPreferredGenre, CompositeKey2<Long, Long>, IUserPreferredGenreDAO> {
-    UserPreferredGenreService(IUserPreferredGenreDAO dao) {
+    public UserPreferredGenreService(IUserPreferredGenreDAO dao) {
         super(dao);
     }
 

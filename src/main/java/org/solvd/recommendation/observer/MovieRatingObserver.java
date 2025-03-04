@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.solvd.recommendation.model.Movie;
 import org.solvd.recommendation.model.UserRating;
-import org.solvd.recommendation.service.MovieService;
+import org.solvd.recommendation.service.imlp.MovieService;
 import org.solvd.recommendation.service.ServiceFactory;
-import org.solvd.recommendation.service.UserRatingService;
+import org.solvd.recommendation.service.imlp.UserRatingService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

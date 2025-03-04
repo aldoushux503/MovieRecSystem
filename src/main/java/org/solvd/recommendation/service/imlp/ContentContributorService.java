@@ -1,4 +1,4 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 import org.solvd.recommendation.dao.IContentContributorDAO;
 import org.solvd.recommendation.model.ContentContributor;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * ContentContributor service implementation.
  */
 public class ContentContributorService extends AbstractService<ContentContributor, CompositeKey3<Long, Long, Integer>, IContentContributorDAO> {
-    ContentContributorService(IContentContributorDAO dao) {
+    public ContentContributorService(IContentContributorDAO dao) {
         super(dao);
     }
 

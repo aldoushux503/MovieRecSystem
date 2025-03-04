@@ -7,8 +7,8 @@ import org.solvd.recommendation.algorithm.similarity.SimilarityCalculatorFactory
 import org.solvd.recommendation.algorithm.similarity.SimilarityMethod;
 import org.solvd.recommendation.model.MovieGenres;
 import org.solvd.recommendation.model.UserRating;
-import org.solvd.recommendation.service.GenreService;
-import org.solvd.recommendation.service.MovieGenreService;
+import org.solvd.recommendation.service.imlp.GenreService;
+import org.solvd.recommendation.service.imlp.MovieGenreService;
 import org.solvd.recommendation.service.ServiceFactory;
 
 import java.math.BigDecimal;

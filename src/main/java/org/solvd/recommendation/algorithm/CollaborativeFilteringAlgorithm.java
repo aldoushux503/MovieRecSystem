@@ -8,7 +8,7 @@ import org.solvd.recommendation.algorithm.similarity.SimilarityMethod;
 import org.solvd.recommendation.model.User;
 import org.solvd.recommendation.model.UserRating;
 import org.solvd.recommendation.service.ServiceFactory;
-import org.solvd.recommendation.service.ViewingHistoryService;
+import org.solvd.recommendation.service.imlp.ViewingHistoryService;
 
 import java.math.BigDecimal;
 import java.util.*;

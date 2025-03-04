@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.solvd.recommendation.model.Movie;
 import org.solvd.recommendation.model.User;
 import org.solvd.recommendation.model.UserRating;
-import org.solvd.recommendation.service.MovieService;
-import org.solvd.recommendation.service.UserRatingService;
-import org.solvd.recommendation.service.UserService;
+import org.solvd.recommendation.service.imlp.MovieService;
+import org.solvd.recommendation.service.imlp.UserRatingService;
+import org.solvd.recommendation.service.imlp.UserService;
 import org.solvd.recommendation.service.ServiceFactory;
 
 import java.util.*;

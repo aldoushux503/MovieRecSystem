@@ -1,4 +1,4 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 import org.solvd.recommendation.dao.IViewingHistoryDAO;
 import org.solvd.recommendation.model.ViewingHistory;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * ViewingHistory service implementation.
  */
 public class ViewingHistoryService extends AbstractService<ViewingHistory, CompositeKey2<Long, Long>, IViewingHistoryDAO> {
-    ViewingHistoryService(IViewingHistoryDAO dao) {
+    public ViewingHistoryService(IViewingHistoryDAO dao) {
         super(dao);
     }
 

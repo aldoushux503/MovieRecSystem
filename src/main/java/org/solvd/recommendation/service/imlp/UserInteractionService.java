@@ -1,4 +1,4 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 import org.solvd.recommendation.dao.IUserInteractionDAO;
 import org.solvd.recommendation.model.UserInteraction;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * UserInteraction service implementation.
  */
 public class UserInteractionService extends AbstractService<UserInteraction, CompositeKey3<Long, Long, Long>, IUserInteractionDAO> {
-    UserInteractionService(IUserInteractionDAO dao) {
+    public UserInteractionService(IUserInteractionDAO dao) {
         super(dao);
     }
 

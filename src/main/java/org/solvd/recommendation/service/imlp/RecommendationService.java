@@ -1,4 +1,4 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +7,8 @@ import org.solvd.recommendation.algorithm.RecommendationAlgorithmFactory;
 import org.solvd.recommendation.model.Movie;
 import org.solvd.recommendation.model.UserRating;
 import org.solvd.recommendation.model.ViewingHistory;
-import org.solvd.recommendation.service.interfaces.IRecommendationService;
+import org.solvd.recommendation.service.IRecommendationService;
+import org.solvd.recommendation.service.ServiceFactory;
 
 import java.sql.Timestamp;
 import java.time.Instant;

@@ -1,4 +1,4 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 
 import org.solvd.recommendation.dao.IMovieGenresDAO;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * MovieGenre service implementation.
  */
 public class MovieGenreService extends AbstractService<MovieGenres, CompositeKey2<Long, Long>, IMovieGenresDAO> {
-    MovieGenreService(IMovieGenresDAO dao) {
+    public MovieGenreService(IMovieGenresDAO dao) {
         super(dao);
     }
 

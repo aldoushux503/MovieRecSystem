@@ -1,4 +1,4 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 import org.solvd.recommendation.dao.IInteractionDAO;
 import org.solvd.recommendation.model.Interaction;
@@ -7,7 +7,7 @@ import org.solvd.recommendation.model.Interaction;
  * Interaction service implementation.
  */
 public class InteractionService extends AbstractService<Interaction, Long, IInteractionDAO> {
-    InteractionService(IInteractionDAO dao) {
+    public InteractionService(IInteractionDAO dao) {
         super(dao);
     }
 }

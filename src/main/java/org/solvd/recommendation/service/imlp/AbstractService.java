@@ -1,7 +1,7 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 import org.solvd.recommendation.dao.IDAO;
-import org.solvd.recommendation.service.interfaces.IService;
+import org.solvd.recommendation.service.IService;
 
 import java.util.List;
 

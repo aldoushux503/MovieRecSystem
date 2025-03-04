@@ -1,4 +1,4 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 import org.solvd.recommendation.dao.IMovieDAO;
 import org.solvd.recommendation.model.Movie;
@@ -7,7 +7,7 @@ import org.solvd.recommendation.model.Movie;
  * Movie service implementation.
  */
 public class MovieService extends AbstractService<Movie, Long, IMovieDAO> {
-    MovieService(IMovieDAO dao) {
+    public MovieService(IMovieDAO dao) {
         super(dao);
     }
 }

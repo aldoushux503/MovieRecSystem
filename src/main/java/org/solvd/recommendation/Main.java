@@ -3,6 +3,7 @@ package org.solvd.recommendation;
 
 import org.solvd.recommendation.model.*;
 import org.solvd.recommendation.service.*;
+import org.solvd.recommendation.service.imlp.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

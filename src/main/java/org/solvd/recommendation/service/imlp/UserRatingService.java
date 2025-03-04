@@ -1,4 +1,4 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 import org.solvd.recommendation.dao.IUserRatingDAO;
 import org.solvd.recommendation.model.UserRating;
@@ -19,7 +19,7 @@ public class UserRatingService extends AbstractService<UserRating, CompositeKey2
     private final List<IRatingChangedObserver> observers = new ArrayList<>();
 
 
-    UserRatingService(IUserRatingDAO dao) {
+    public UserRatingService(IUserRatingDAO dao) {
         super(dao);
 
         // Register the default observer to update movie average ratings

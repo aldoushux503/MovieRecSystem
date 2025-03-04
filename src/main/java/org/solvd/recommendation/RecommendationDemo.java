@@ -2,11 +2,10 @@ package org.solvd.recommendation;
 
 import org.solvd.recommendation.model.Movie;
 import org.solvd.recommendation.service.ServiceFactory;
-import org.solvd.recommendation.service.interfaces.IRecommendationService;
+import org.solvd.recommendation.service.IRecommendationService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Demonstration class for the movie recommendation system.
