@@ -6,7 +6,7 @@
     <resultMap id="ContentContributorsResultMap" type="org.solvd.recommendation.model.ContentContributor">
         <id property="movieId" column="movie_id"/>
         <id property="personId" column="person_id"/>
-        <id property="personRoleId" column="PersonRole_person_role_id"/>
+        <id property="personRoleId" column="person_role_id"/>
     </resultMap>
 
 
@@ -15,10 +15,12 @@
     </select>
 
     <insert id="save">
-        INSERT INTO ContentContributors (movie_id, person_id) VALUES (#{movieId}, #{personId})
+        INSERT INTO ContentContributors (movie_id, person_id, person_role_id) VALUES (#{movieId}, #{personId}, #{personRoleId})
     </insert>
 
-
+    <update id="update">
+        UPDATE ContentContributors SET movie_id=#{movieId}, person_id=#{personId}, person_role_id=#{personRoleId} WHERE movie_id =#{movieId} AND person_id = #{personId} AND person_role_id=#{personRoleId}
+    </update>
 
     <delete id="delete">
         DELETE FROM ContentContributors WHERE movie_id = #{movieId} AND person_id = #{personId}

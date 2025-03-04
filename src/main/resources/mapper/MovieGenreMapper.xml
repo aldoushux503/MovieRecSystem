@@ -16,7 +16,10 @@
         INSERT INTO MovieGenres (movie_id, genre_id) VALUES (#{movieId}, #{genreId})
     </insert>
 
-
+    <update id="update">
+        UPDATE MovieGenres SET movie_id = #{movieId}, genre_id = #{genreId}
+        WHERE movie_id = #{movieId} AND genre_id = #{genreId}
+    </update>
 
 
     <delete id="delete">

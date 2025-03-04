@@ -14,8 +14,6 @@
         SELECT * FROM Movie WHERE movie_id = #{id}
     </select>
 
-
-
     <insert id="save" useGeneratedKeys="true" keyProperty="movieId">
         INSERT INTO Movie (title, duration, average_rating) VALUES (#{title}, #{duration}, #{averageRating})
     </insert>

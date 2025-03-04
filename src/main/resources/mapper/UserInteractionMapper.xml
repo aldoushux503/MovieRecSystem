@@ -4,22 +4,27 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.solvd.recommendation.mapper.IUserInteractionMapper">
     <resultMap id="UserInteractionsResultMap" type="org.solvd.recommendation.model.UserInteraction">
-        <id property="movieId" column="Movie_movie_id"/>
-        <id property="userId" column="User_user_id"/>
+        <id property="movieId" column="movie_id"/>
+        <id property="userId" column="user_id"/>
         <id property="interactionId" column="interactions_id"/>
     </resultMap>
 
 
     <select id="get" resultMap="UserInteractionsResultMap">
-        SELECT * FROM UserInteractions WHERE Movie_movie_id = #{movieId} AND User_user_id = #{userId} AND interactions_id = #{interactionId}
+        SELECT * FROM UserInteractions WHERE movie_id = #{movieId} AND user_id = #{userId} AND interactions_id = #{interactionId}
     </select>
 
     <insert id="save">
-        INSERT INTO UserInteractions (Movie_movie_id, User_user_id, interactions_id) VALUES (#{movieId}, #{userId}, #{interactionId})
+        INSERT INTO UserInteractions (movie_id, user_id, interactions_id) VALUES (#{movieId}, #{userId}, #{interactionId})
     </insert>
 
+    <update id="update">
+        UPDATE UserInteractions SET movie_id = #{movieId}, user_id = #{userId}, interactions_id = #{interactionId}
+        WHERE movie_id = #{movieId} AND user_id = #{userId} AND interactions_id = #{interactionId}
+    </update>
+
     <delete id="delete">
-        DELETE FROM UserInteractions WHERE Movie_movie_id = #{movieId} AND User_user_id = #{userId} AND interactions_id = #{interactionId}
+        DELETE FROM UserInteractions WHERE movie_id = #{movieId} AND user_id = #{userId} AND interactions_id = #{interactionId}
     </delete>
 
     <select id="getAll" resultMap="UserInteractionsResultMap">

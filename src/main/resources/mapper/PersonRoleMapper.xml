@@ -16,6 +16,10 @@
         INSERT INTO PersonRole (role_name) VALUES #{roleName})
     </insert>
 
+    <update id="update">
+    UPDATE PersonRole SET role_name = #{roleName} WHERE person_role_id = #{personId}
+    </update>
+
     <delete id="delete">
         DELETE FROM PersonRole WHERE person_role_id = #{personId}
     </delete>

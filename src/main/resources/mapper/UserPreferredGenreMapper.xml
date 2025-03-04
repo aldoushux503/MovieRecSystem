@@ -4,22 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.solvd.recommendation.mapper.IUserPreferredGenreMapper">
     <resultMap id="UserPreferredGenreResultMap" type="org.solvd.recommendation.model.UserPreferredGenre">
-        <id property="userId" column="User_user_id"/>
-        <id property="genreId" column="Genre_genre_id"/>
+        <id property="userId" column="user_id"/>
+        <id property="genreId" column="genre_id"/>
     </resultMap>
 
     <select id="get" resultMap="UserPreferredGenreResultMap">
-        SELECT * FROM UserPreferredGenres WHERE User_user_id = #{userId} AND Genre_genre_id = #{genreId}
+        SELECT * FROM UserPreferredGenres WHERE user_id = #{userId} AND genre_id = #{genreId}
     </select>
 
-
-
     <insert id="save">
-        INSERT INTO UserPreferredGenres (User_user_id, Genre_genre_id) VALUES (#{userId}, #{genreId})
+        INSERT INTO UserPreferredGenres (user_id, genre_id) VALUES (#{userId}, #{genreId})
     </insert>
 
+    <update id="update">
+    UPDATE UserPreferredGenres SET user_id = #{userId}, genre_id = #{genreId} WHERE user_id = #{userId}
+    AND genre_id = #{genreId}
+    </update>
+
     <delete id="delete">
-        DELETE FROM UserPreferredGenres WHERE User_user_id = #{userId} AND Genre_genre_id = #{genreId}
+        DELETE FROM UserPreferredGenres WHERE user_id = #{userId} AND genre_id = #{genreId}
     </delete>
 
     <select id="getAll" resultMap="UserPreferredGenreResultMap">
