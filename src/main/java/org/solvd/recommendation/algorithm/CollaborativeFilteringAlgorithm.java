@@ -7,8 +7,9 @@ import org.solvd.recommendation.algorithm.similarity.SimilarityCalculatorFactory
 import org.solvd.recommendation.algorithm.similarity.SimilarityMethod;
 import org.solvd.recommendation.model.User;
 import org.solvd.recommendation.model.UserRating;
+import org.solvd.recommendation.service.IViewingHistoryService;
 import org.solvd.recommendation.service.ServiceFactory;
-import org.solvd.recommendation.service.ViewingHistoryService;
+import org.solvd.recommendation.service.imlp.ViewingHistoryService;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -25,7 +26,7 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
 
     private final ISimilarityCalculator similarityCalculator;
     private final int neighborCount;
-    private final ViewingHistoryService viewingHistoryService;
+    private final IViewingHistoryService viewingHistoryService;
 
     public CollaborativeFilteringAlgorithm() {
         this(SimilarityMethod.PEARSON, DEFAULT_NEIGHBOR_COUNT);

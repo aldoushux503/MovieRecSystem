@@ -5,9 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.solvd.recommendation.model.Movie;
 import org.solvd.recommendation.model.User;
 import org.solvd.recommendation.model.UserRating;
-import org.solvd.recommendation.service.MovieService;
-import org.solvd.recommendation.service.UserRatingService;
-import org.solvd.recommendation.service.UserService;
+import org.solvd.recommendation.service.IMovieService;
+import org.solvd.recommendation.service.IUserRatingService;
+import org.solvd.recommendation.service.IUserService;
+import org.solvd.recommendation.service.imlp.MovieService;
+import org.solvd.recommendation.service.imlp.UserRatingService;
+import org.solvd.recommendation.service.imlp.UserService;
 import org.solvd.recommendation.service.ServiceFactory;
 
 import java.util.*;
@@ -20,9 +23,9 @@ import java.util.stream.Collectors;
 public abstract class AbstractRecommendationAlgorithm implements IRecommendationAlgorithm {
     private static final Logger logger = LoggerFactory.getLogger(AbstractRecommendationAlgorithm.class);
 
-    protected final UserService userService;
-    protected final MovieService movieService;
-    protected final UserRatingService ratingService;
+    protected final IUserService userService;
+    protected final IMovieService movieService;
+    protected final IUserRatingService ratingService;
 
     protected AbstractRecommendationAlgorithm() {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();

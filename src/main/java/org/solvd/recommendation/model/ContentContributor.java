@@ -9,5 +9,5 @@ import lombok.*;
 public class ContentContributor {
     private Long movieId;
     private Long personId;
-    private Integer personRoleId;
+    private Long personRoleId;
 }

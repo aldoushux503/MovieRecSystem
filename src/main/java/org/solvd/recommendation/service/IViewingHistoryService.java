@@ -1,16 +1,14 @@
-package org.solvd.recommendation.service.interfaces;
+package org.solvd.recommendation.service;
 
-import org.solvd.recommendation.model.Movie;
+import org.solvd.recommendation.model.ContentContributor;
 import org.solvd.recommendation.model.User;
 import org.solvd.recommendation.model.ViewingHistory;
+import org.solvd.recommendation.util.CompositeKey2;
+import org.solvd.recommendation.util.CompositeKey3;
 
 import java.util.List;
 
-/**
- * Service interface for viewing history operations.
- * Tracks what movies users have watched.
- */
-public interface IViewingHistoryService {
+public interface IViewingHistoryService extends IService<ViewingHistory, CompositeKey2<Long, Long>>{
     ViewingHistory getViewingHistory(Long userId, Long movieId);
 
     void addViewingHistory(ViewingHistory viewingHistory);
@@ -20,8 +18,6 @@ public interface IViewingHistoryService {
     void deleteViewingHistory(ViewingHistory viewingHistory);
 
     List<ViewingHistory> getUserViewingHistory(Long userId);
-
-    List<Movie> getUserWatchedMovies(Long userId);
 
     List<User> getUsersWhoWatched(Long movieId);
 }

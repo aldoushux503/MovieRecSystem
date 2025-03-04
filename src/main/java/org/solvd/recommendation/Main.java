@@ -3,6 +3,7 @@ package org.solvd.recommendation;
 
 import org.solvd.recommendation.model.*;
 import org.solvd.recommendation.service.*;
+import org.solvd.recommendation.service.imlp.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -14,16 +15,16 @@ public class Main {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
 
         // Entity services
-        MovieService movieService = serviceFactory.getMovieService();
-        UserService userService = serviceFactory.getUserService();
-        GenreService genreService = serviceFactory.getGenreService();
-        PersonService personService = serviceFactory.getPersonService();
-        PersonRoleService personRoleService = serviceFactory.getPersonRoleService();
+        IMovieService movieService = serviceFactory.getMovieService();
+        IUserService userService = serviceFactory.getUserService();
+        IGenreService genreService = serviceFactory.getGenreService();
+        IPersonService personService = serviceFactory.getPersonService();
+        IPersonRoleService personRoleService = serviceFactory.getPersonRoleService();
 
         // Relationship services
-        UserRatingService userRatingService = serviceFactory.getUserRatingService();
-        MovieGenreService movieGenreService = serviceFactory.getMovieGenreService();
-        ViewingHistoryService viewingHistoryService = serviceFactory.getViewingHistoryService();
+        IUserRatingService userRatingService = serviceFactory.getUserRatingService();
+        IMovieGenreService movieGenreService = serviceFactory.getMovieGenreService();
+        IViewingHistoryService viewingHistoryService = serviceFactory.getViewingHistoryService();
 
 
 

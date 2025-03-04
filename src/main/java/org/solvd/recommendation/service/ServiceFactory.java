@@ -1,7 +1,7 @@
 package org.solvd.recommendation.service;
 
 import org.solvd.recommendation.dao.DAOFactory;
-import org.solvd.recommendation.service.interfaces.IRecommendationService;
+import org.solvd.recommendation.service.imlp.*;
 
 /**
  * Factory for creating service instances.
@@ -12,7 +12,19 @@ public class ServiceFactory {
     private static final ServiceFactory instance = new ServiceFactory();
 
     // Lazily initialized service instances
+    private IGenreService genreService;
+    private IMovieService movieService;
+    private IPersonService personService;
+    private IUserRatingService userRatingService;
+    private IUserService userService;
+    private IInteractionService interactionService;
+    private IViewingHistoryService viewingHistoryService;
     private IRecommendationService recommendationService;
+    private IMovieGenreService movieGenreService;
+    private IUserPreferredGenreService userPreferredGenreService;
+    private IContentContributorService contentContributorService;
+    private IUserInteractionService userInteractionService;
+    private IPersonRoleService personRoleService;
 
     private ServiceFactory() {
         // Private constructor to enforce Singleton pattern
@@ -22,58 +34,98 @@ public class ServiceFactory {
         return instance;
     }
 
-    public MovieService getMovieService() {
-        return new MovieService(DAOFactory.getMovieDAO());
+    public IMovieService getMovieService() {
+        if (movieService == null) {
+            movieService = new MovieService(DAOFactory.getMovieDAO(),
+                    getMovieGenreService(),
+                    getContentContributorService());
+        }
+        return movieService;
     }
 
-    public UserService getUserService() {
-        return new UserService(DAOFactory.getUserDAO());
+    public IUserService getUserService() {
+        if (userService == null) {
+            userService = new UserService(DAOFactory.getUserDAO(),
+                    getUserPreferredGenreService());
+        }
+        return userService;
     }
 
-    public GenreService getGenreService() {
-        return new GenreService(DAOFactory.getGenreDAO());
+    public IGenreService getGenreService() {
+        if (genreService == null) {
+            genreService = new GenreService(DAOFactory.getGenreDAO(),
+                    getMovieGenreService());
+        }
+        return genreService;
     }
 
-    public PersonService getPersonService() {
-        return new PersonService(DAOFactory.getPersonDAO());
+    public IPersonService getPersonService() {
+        if (personService == null) {
+            personService = new PersonService(DAOFactory.getPersonDAO(),
+                    getContentContributorService());
+        }
+        return personService;
     }
 
-    public PersonRoleService getPersonRoleService() {
-        return new PersonRoleService(DAOFactory.getPersonRoleDAO());
+    public IPersonRoleService getPersonRoleService() {
+        if (personRoleService == null) {
+            personRoleService = new PersonRoleService(DAOFactory.getPersonRoleDAO());
+        }
+        return personRoleService;
     }
 
-    public InteractionService getInteractionService() {
-        return new InteractionService(DAOFactory.getInteractionDAO());
+    public IInteractionService getInteractionService() {
+        if (interactionService == null) {
+            interactionService = new InteractionService(DAOFactory.getInteractionDAO(),
+                    getUserInteractionService());
+        }
+        return interactionService;
     }
 
-    public UserRatingService getUserRatingService() {
-        return new UserRatingService(DAOFactory.getUserRatingDAO());
+    public IUserRatingService getUserRatingService() {
+        if (userRatingService == null) {
+            userRatingService = new UserRatingService(DAOFactory.getUserRatingDAO(),
+                   getMovieService());
+        }
+        return userRatingService;
     }
 
-    public ViewingHistoryService getViewingHistoryService() {
-        return new ViewingHistoryService(DAOFactory.getViewingHistoryDAO());
+    public IViewingHistoryService getViewingHistoryService() {
+        if (viewingHistoryService == null) {
+            viewingHistoryService = new ViewingHistoryService(DAOFactory.getViewingHistoryDAO(),
+                    (UserService) getUserService());
+        }
+        return viewingHistoryService;
     }
 
-    public MovieGenreService getMovieGenreService() {
-        return new MovieGenreService(DAOFactory.getMovieGenreDAO());
+    public IMovieGenreService getMovieGenreService() {
+        if (movieGenreService == null) {
+            movieGenreService = new MovieGenreService(DAOFactory.getMovieGenreDAO());
+        }
+        return movieGenreService;
     }
 
-    public UserPreferredGenreService getUserPreferredGenreService() {
-        return new UserPreferredGenreService(DAOFactory.getUserPreferredGenreDAO());
+    public IUserPreferredGenreService getUserPreferredGenreService() {
+        if (userPreferredGenreService == null) {
+            userPreferredGenreService = new UserPreferredGenreService(DAOFactory.getUserPreferredGenreDAO());
+        }
+        return userPreferredGenreService;
     }
 
-    public ContentContributorService getContentContributorService() {
-        return new ContentContributorService(DAOFactory.getContentContributorDAO());
+    public IContentContributorService getContentContributorService() {
+        if (contentContributorService == null) {
+            contentContributorService = new ContentContributorService(DAOFactory.getContentContributorDAO());
+        }
+        return contentContributorService;
     }
 
-    public UserInteractionService getUserInteractionService() {
-        return new UserInteractionService(DAOFactory.getUserInteractionDAO());
+    public IUserInteractionService getUserInteractionService() {
+        if (userInteractionService == null) {
+            userInteractionService = new UserInteractionService(DAOFactory.getUserInteractionDAO());
+        }
+        return userInteractionService;
     }
 
-    /**
-     * Gets the recommendation service instance.
-     * Uses lazy initialization for performance optimization.
-     */
     public IRecommendationService getRecommendationService() {
         if (recommendationService == null) {
             recommendationService = new RecommendationService();

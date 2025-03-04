@@ -1,4 +1,4 @@
-package org.solvd.recommendation.service;
+package org.solvd.recommendation.service.imlp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +7,7 @@ import org.solvd.recommendation.algorithm.RecommendationAlgorithmFactory;
 import org.solvd.recommendation.model.Movie;
 import org.solvd.recommendation.model.UserRating;
 import org.solvd.recommendation.model.ViewingHistory;
-import org.solvd.recommendation.service.interfaces.IRecommendationService;
+import org.solvd.recommendation.service.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -19,14 +19,15 @@ import java.util.stream.Collectors;
  * Implementation of the recommendation service interface.
  * Provides methods for generating movie recommendations using different algorithms.
  */
+
 public class RecommendationService implements IRecommendationService {
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
     private static final int DEFAULT_TRENDING_DAYS = 30;
 
     private final RecommendationAlgorithmFactory algorithmFactory;
-    private final MovieService movieService;
-    private final UserRatingService ratingService;
-    private final ViewingHistoryService viewingHistoryService;
+    private final IMovieService movieService;
+    private final IUserRatingService ratingService;
+    private final IViewingHistoryService viewingHistoryService;
 
     public RecommendationService() {
         this.algorithmFactory = RecommendationAlgorithmFactory.getInstance();
@@ -83,7 +84,7 @@ public class RecommendationService implements IRecommendationService {
                 .toList();
 
         // Get users who rated this movie highly
-        List<UserRating> movieRatings = ratingService.getAllMovieRatings(movieId);
+        List<UserRating> movieRatings = ratingService.getMovieRatings(movieId);
         List<Long> userIds = movieRatings.stream()
                 .filter(rating -> rating.getRatingValue().doubleValue() >= 7.0) // Users who liked this movie
                 .map(UserRating::getUserId)
@@ -99,7 +100,7 @@ public class RecommendationService implements IRecommendationService {
 
         for (Movie movie : allMovies) {
             Long otherMovieId = movie.getMovieId();
-            List<UserRating> otherMovieRatings = ratingService.getAllMovieRatings(otherMovieId);
+            List<UserRating> otherMovieRatings = ratingService.getMovieRatings(otherMovieId);
 
             // Count users who rated both movies highly
             long commonUsers = otherMovieRatings.stream()
@@ -132,9 +133,7 @@ public class RecommendationService implements IRecommendationService {
         // Count views for each movie in the trending period
         Map<Long, Long> viewCounts = new HashMap<>();
 
-        // This is inefficient but works with the current implementation
-        // In a real system, this would be a database query with proper filtering
-        List<ViewingHistory> recentViews = viewingHistoryService.getAll().stream()
+        List<ViewingHistory> recentViews = viewingHistoryService.getUserViewingHistory(null).stream()
                 .filter(history -> history.getWatchDate().after(cutoffDate))
                 .toList();
 

@@ -7,8 +7,10 @@ import org.solvd.recommendation.algorithm.similarity.SimilarityCalculatorFactory
 import org.solvd.recommendation.algorithm.similarity.SimilarityMethod;
 import org.solvd.recommendation.model.MovieGenres;
 import org.solvd.recommendation.model.UserRating;
-import org.solvd.recommendation.service.GenreService;
-import org.solvd.recommendation.service.MovieGenreService;
+import org.solvd.recommendation.service.IGenreService;
+import org.solvd.recommendation.service.IMovieGenreService;
+import org.solvd.recommendation.service.imlp.GenreService;
+import org.solvd.recommendation.service.imlp.MovieGenreService;
 import org.solvd.recommendation.service.ServiceFactory;
 
 import java.math.BigDecimal;
@@ -24,8 +26,8 @@ public class ContentBasedFilteringAlgorithm extends AbstractRecommendationAlgori
     private static final Logger logger = LoggerFactory.getLogger(ContentBasedFilteringAlgorithm.class);
     private static final double RATING_THRESHOLD = 7.0; // Consider movies rated 7+ as liked
 
-    private final MovieGenreService movieGenreService;
-    private final GenreService genreService;
+    private final IMovieGenreService movieGenreService;
+    private final IGenreService genreService;
     private final ISimilarityCalculator similarityCalculator;
 
     public ContentBasedFilteringAlgorithm() {

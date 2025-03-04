@@ -1,14 +1,11 @@
-package org.solvd.recommendation.service.interfaces;
+package org.solvd.recommendation.service;
 
 import org.solvd.recommendation.model.Movie;
+import org.solvd.recommendation.service.imlp.RecommendationService;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- * Core service interface for generating movie recommendations.
- * Implements algorithms to suggest movies based on user preferences and behavior.
- */
 public interface IRecommendationService {
     List<Movie> recommendMoviesForUser(Long userId, int limit);
 

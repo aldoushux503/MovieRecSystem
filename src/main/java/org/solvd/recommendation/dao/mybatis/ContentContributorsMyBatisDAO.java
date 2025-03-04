@@ -9,7 +9,7 @@ import org.solvd.recommendation.model.ContentContributor;
 import org.solvd.recommendation.util.CompositeKey3;
 
 public class ContentContributorsMyBatisDAO
-        extends AbstractMyBatisDAO<ContentContributor, CompositeKey3<Long, Long, Integer>, IContentContributorMapper>
+        extends AbstractMyBatisDAO<ContentContributor, CompositeKey3<Long, Long, Long>, IContentContributorMapper>
         implements IContentContributorDAO {
 
     public ContentContributorsMyBatisDAO() {
@@ -22,7 +22,7 @@ public class ContentContributorsMyBatisDAO
     }
 
     @Override
-    public ContentContributor get(CompositeKey3<Long, Long, Integer> id) {
+    public ContentContributor get(CompositeKey3<Long, Long, Long> id) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             IContentContributorMapper mapper = session.getMapper(getMapperClass());
             ContentContributor entity = mapper.get(id.getKey1(), id.getKey2(), id.getKey3());
@@ -40,7 +40,7 @@ public class ContentContributorsMyBatisDAO
     }
 
     @Override
-    public CompositeKey3<Long, Long, Integer> save(ContentContributor entity) {
+    public CompositeKey3<Long, Long, Long> save(ContentContributor entity) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             try {
                 IContentContributorMapper mapper = session.getMapper(getMapperClass());
@@ -77,7 +77,7 @@ public class ContentContributorsMyBatisDAO
         try (SqlSession session = sqlSessionFactory.openSession()) {
             try {
                 IContentContributorMapper mapper = session.getMapper(getMapperClass());
-                CompositeKey3<Long, Long, Integer> id = createCompositeKey(entity);
+                CompositeKey3<Long, Long, Long> id = createCompositeKey(entity);
                 boolean result = mapper.delete(id.getKey1(), id.getKey2(), id.getKey3());
 
                 if (!result) {
@@ -96,7 +96,7 @@ public class ContentContributorsMyBatisDAO
         }
     }
 
-    private CompositeKey3<Long, Long, Integer> createCompositeKey(ContentContributor entity) {
+    private CompositeKey3<Long, Long, Long> createCompositeKey(ContentContributor entity) {
         if (entity == null || entity.getMovieId() == null || entity.getPersonId() == null || entity.getPersonRoleId() == null) {
             throw new IllegalArgumentException("ContentContributor has incomplete key values");
         }
