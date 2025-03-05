@@ -13,9 +13,4 @@ public interface IRecommendationService {
 
     List<Movie> getContentBasedRecommendations(Long userId, int limit);
 
-    List<Movie> getSimilarMovies(Long movieId, int limit);
-
-    List<Movie> getTrendingMovies(int limit);
-
-    Map<Long, Double> predictUserRatings(Long userId, List<Long> movieIds);
 }

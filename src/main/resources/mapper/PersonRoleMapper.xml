@@ -13,7 +13,7 @@
     </select>
 
     <insert id="save" useGeneratedKeys="true" keyProperty="personId">
-        INSERT INTO PersonRole (role_name) VALUES #{roleName})
+        INSERT INTO PersonRole (role_name) VALUES (#{roleName})
     </insert>
 
     <delete id="delete">

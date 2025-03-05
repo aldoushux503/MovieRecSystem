@@ -9,12 +9,24 @@ import java.util.*;
  * Hybrid recommendation algorithm implementation that combines
  * collaborative filtering and content-based filtering approaches.
  *
- * This approach leverages the strengths of both methods:
- * - Collaborative filtering for capturing community preferences and discovering new content
- * - Content-based filtering for handling cold start problem and providing explainable recommendations
+ * This algorithm addresses limitations of individual recommendation approaches by
+ * blending their predictions with configurable weights. It enhances recommendation
+ * quality by leveraging both community patterns and content features.
+ *
+ * Example scenario:
+ * - New user with 2 ratings gets predictions where:
+ *   - Collaborative predictions have limited accuracy due to sparse data
+ *   - Content-based predictions work well based on the few explicit preferences
+ *   - Hybrid algorithm increases content-based weight to 0.8 for better cold-start handling
+ *
+ * - For Movie1:
+ *   - Collaborative predicted rating: 7.5 with weight 0.2 → 1.5
+ *   - Content-based predicted rating: 8.0 with weight 0.8 → 6.4
+ *   - Final hybrid rating: 7.9
  */
 public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorithm {
     private static final Logger logger = LoggerFactory.getLogger(HybridRecommendationAlgorithm.class);
+    private static final int NEW_USER_THRESHOLD = 5;
 
     private final IRecommendationAlgorithm collaborativeAlgorithm;
     private final IRecommendationAlgorithm contentBasedAlgorithm;
@@ -74,7 +86,8 @@ public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorit
 
                 // Add to existing prediction or set as new prediction
                 if (hybridPredictions.containsKey(movieId)) {
-                    hybridPredictions.put(movieId, hybridPredictions.get(movieId) + contentRating);
+                    hybridPredictions.put(movieId,
+                            hybridPredictions.get(movieId) + contentRating);
                 } else {
                     hybridPredictions.put(movieId, contentRating);
                 }
@@ -102,6 +115,6 @@ public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorit
      */
     private boolean isNewUser(Long userId) {
         int ratingCount = ratingService.getAllUserRatings(userId).size();
-        return ratingCount < 5; // Users with fewer than 5 ratings are considered new
+        return ratingCount < NEW_USER_THRESHOLD; // Users with fewer than 5 ratings are considered new
     }
 }

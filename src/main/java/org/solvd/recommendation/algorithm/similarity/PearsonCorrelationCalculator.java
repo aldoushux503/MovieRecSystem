@@ -28,7 +28,7 @@ public class PearsonCorrelationCalculator implements ISimilarityCalculator {
     private static final Logger logger = LoggerFactory.getLogger(PearsonCorrelationCalculator.class);
 
     @Override
-    public double calculateSimilarity(Map<Long, BigDecimal> vector1, Map<Long, BigDecimal> vector2) {
+    public double calculateSimilarity(Map<Long, Double> vector1, Map<Long, Double> vector2) {
         // Find common keys (items rated by both users)
         Set<Long> commonKeys = new HashSet<>(vector1.keySet());
         commonKeys.retainAll(vector2.keySet());
@@ -41,46 +41,45 @@ public class PearsonCorrelationCalculator implements ISimilarityCalculator {
         int n = commonKeys.size();
 
         // Calculate sums for means
-        BigDecimal sum1 = BigDecimal.ZERO;
-        BigDecimal sum2 = BigDecimal.ZERO;
+        double sum1 = 0.0;
+        double sum2 = 0.0;
         for (Long key : commonKeys) {
-            sum1 = sum1.add(vector1.get(key));
-            sum2 = sum2.add(vector2.get(key));
+            sum1 += vector1.get(key);
+            sum2 += vector2.get(key);
         }
 
         // Calculate means
-        BigDecimal mean1 = sum1.divide(BigDecimal.valueOf(n), MathContext.DECIMAL64);
-        BigDecimal mean2 = sum2.divide(BigDecimal.valueOf(n), MathContext.DECIMAL64);
+        double mean1 = sum1 / n;
+        double mean2 = sum2 / n;
 
         // Initialize accumulators for correlation components
-        BigDecimal numerator = BigDecimal.ZERO;
-        BigDecimal denom1 = BigDecimal.ZERO;
-        BigDecimal denom2 = BigDecimal.ZERO;
+        double numerator = 0.0;
+        double denom1 = 0.0;
+        double denom2 = 0.0;
 
         // Calculate numerator and denominators for correlation
         for (Long key : commonKeys) {
-            BigDecimal val1 = vector1.get(key).subtract(mean1);
-            BigDecimal val2 = vector2.get(key).subtract(mean2);
+            double val1 = vector1.get(key) - mean1;
+            double val2 = vector2.get(key) - mean2;
 
-            numerator = numerator.add(val1.multiply(val2));
-            denom1 = denom1.add(val1.multiply(val1));
-            denom2 = denom2.add(val2.multiply(val2));
+            numerator += val1 * val2;
+            denom1 += val1 * val1;
+            denom2 += val2 * val2;
         }
 
         // Check for zero variance
-        if (denom1.compareTo(BigDecimal.ZERO) <= 0 || denom2.compareTo(BigDecimal.ZERO) <= 0) {
+        if (denom1 <= 0.0 || denom2 <= 0.0) {
             logger.debug("Zero variance in one or both vectors, returning similarity of 0.0");
             return 0.0;
         }
 
         // Calculate square roots of denominators
-        BigDecimal sqrtDenom1 = denom1.sqrt(MathContext.DECIMAL64);
-        BigDecimal sqrtDenom2 = denom2.sqrt(MathContext.DECIMAL64);
+        double sqrtDenom1 = Math.sqrt(denom1);
+        double sqrtDenom2 = Math.sqrt(denom2);
 
         // Calculate Pearson correlation
-        BigDecimal denominator = sqrtDenom1.multiply(sqrtDenom2);
-        BigDecimal correlation = numerator.divide(denominator, MathContext.DECIMAL64);
-        return correlation.doubleValue();
+        double denominator = sqrtDenom1 * sqrtDenom2;
+        return numerator / denominator;
     }
 }
 
