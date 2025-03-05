@@ -38,10 +38,11 @@ import java.util.stream.Collectors;
  * List<Movie> recommendations = algorithm.recommendMovies(userId, 10);
  */
 public abstract class AbstractRecommendationAlgorithm implements IRecommendationAlgorithm {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractRecommendationAlgorithm.class);
+
     protected final IUserService userService;
     protected final IMovieService movieService;
     protected final IUserRatingService ratingService;
-
     protected final IViewingHistoryService viewingHistoryService;
 
     protected AbstractRecommendationAlgorithm() {
@@ -70,24 +71,26 @@ public abstract class AbstractRecommendationAlgorithm implements IRecommendation
         // Get all movies
         List<Movie> allMovies = movieService.getAll();
 
-        // Get movies already rated  and watched by the user
+        // Get movies already rated by the user
         List<Long> ratedMovieIds = ratingService.getAllUserRatings(userId)
                 .stream()
                 .map(UserRating::getMovieId)
                 .toList();
 
-        List<Long> viewedMovieIds = viewingHistoryService.getUserViewingHistory(userId)
+        // Get movies already watched by the user (from viewing history)
+        List<Long> watchedMovieIds = viewingHistoryService.getUserViewingHistory(userId)
                 .stream()
                 .map(ViewingHistory::getMovieId)
                 .toList();
 
+        // Combine both lists to get all movies to exclude
+        Set<Long> excludedMovieIds = new HashSet<>(ratedMovieIds);
+        excludedMovieIds.addAll(watchedMovieIds);
 
-        // Filter out movies already rated
+        // Filter out both rated and watched movies
         List<Movie> candidateMovies = allMovies.stream()
-                .filter(movie -> !ratedMovieIds.contains(movie.getMovieId()) &&
-                        !viewedMovieIds.contains(movie.getMovieId()))
+                .filter(movie -> !excludedMovieIds.contains(movie.getMovieId()))
                 .toList();
-
 
         // Predict ratings for candidate movies
         Map<Long, Double> predictedRatings = predictRatings(userId,

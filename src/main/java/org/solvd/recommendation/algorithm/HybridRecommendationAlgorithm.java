@@ -26,6 +26,7 @@ import java.util.*;
  */
 public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorithm {
     private static final Logger logger = LoggerFactory.getLogger(HybridRecommendationAlgorithm.class);
+    private static final int NEW_USER_THRESHOLD = 5;
 
     private final IRecommendationAlgorithm collaborativeAlgorithm;
     private final IRecommendationAlgorithm contentBasedAlgorithm;
@@ -85,7 +86,8 @@ public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorit
 
                 // Add to existing prediction or set as new prediction
                 if (hybridPredictions.containsKey(movieId)) {
-                    hybridPredictions.put(movieId, hybridPredictions.get(movieId) + contentRating);
+                    hybridPredictions.put(movieId,
+                            hybridPredictions.get(movieId) + contentRating);
                 } else {
                     hybridPredictions.put(movieId, contentRating);
                 }
@@ -113,6 +115,6 @@ public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorit
      */
     private boolean isNewUser(Long userId) {
         int ratingCount = ratingService.getAllUserRatings(userId).size();
-        return ratingCount < 5; // Users with fewer than 5 ratings are considered new
+        return ratingCount < NEW_USER_THRESHOLD; // Users with fewer than 5 ratings are considered new
     }
 }

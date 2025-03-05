@@ -65,7 +65,7 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
     @Override
     public Map<Long, Double> predictRatings(Long userId, List<Long> movieIds) {
         // Get target user's ratings
-        Map<Long, BigDecimal> targetUserRatings = getUserRatingsMap(userId);
+        Map<Long, Double> targetUserRatings = getUserRatingsMap(userId);
 
         // Find similar users (neighbors)
         Map<Long, Double> userSimilarities = findSimilarUsers(userId, targetUserRatings);
@@ -91,7 +91,7 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
     /**
      * Finds users similar to the target user based on rating patterns.
      */
-    private Map<Long, Double> findSimilarUsers(Long targetUserId, Map<Long, BigDecimal> targetUserRatings) {
+    private Map<Long, Double> findSimilarUsers(Long targetUserId, Map<Long, Double> targetUserRatings) {
         // Get all users
         List<Long> allUserIds = userService.getAll().stream()
                 .map(User::getUserId)
@@ -102,7 +102,7 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
 
         // Calculate similarity with each user
         for (Long userId : allUserIds) {
-            Map<Long, BigDecimal> userRatings = getUserRatingsMap(userId);
+            Map<Long, Double> userRatings = getUserRatingsMap(userId);
 
             // Skip users with no ratings
             if (userRatings.isEmpty()) {
@@ -132,16 +132,11 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
 
     /**
      * Predicts a rating for a specific movie based on similar users' ratings.
-     * If similarity = 0.9 (high similarity) and userRating = 8.5,
-     * then 0.9 * 8.5 = 7.65 is added to weightedRatingSum.
-     * This reflects that this user’s opinion is highly relevant.
-     * Predicted Rating= ∑(similarity×rating)
-     *                     ∑∣+-similarity∣
      */
     private Double predictRating(Long movieId, Map<Long, Double> similarUsers,
-                                 Map<Long, BigDecimal> targetUserRatings) {
-        double weightSum = 0;
-        double weightedRatingSum = 0;
+                                 Map<Long, Double> targetUserRatings) {
+        double weightSum = 0.0;
+        double weightedRatingSum = 0.0;
 
         // If target user has already rated this movie, don't predict
         if (targetUserRatings.containsKey(movieId)) {
@@ -163,11 +158,10 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
             double userRating = rating.getRatingValue().doubleValue();
             weightedRatingSum += similarity * userRating;
             weightSum += Math.abs(similarity);
-
         }
 
         // If no similar users rated this movie, can't predict
-        if (weightSum == 0) {
+        if (weightSum == 0.0) {
             return null;
         }
 
@@ -178,11 +172,11 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
     /**
      * Converts user ratings to a map of movie IDs to rating values.
      */
-    private Map<Long, BigDecimal> getUserRatingsMap(Long userId) {
+    private Map<Long, Double> getUserRatingsMap(Long userId) {
         return ratingService.getAllUserRatings(userId).stream()
                 .collect(Collectors.toMap(
                         UserRating::getMovieId,
-                        UserRating::getRatingValue
+                        rating -> rating.getRatingValue().doubleValue()
                 ));
     }
 }

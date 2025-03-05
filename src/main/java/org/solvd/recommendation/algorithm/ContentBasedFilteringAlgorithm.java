@@ -82,21 +82,8 @@ public class ContentBasedFilteringAlgorithm extends AbstractRecommendationAlgori
                 continue;
             }
 
-            // Convert profiles to BigDecimal for similarity calculation
-            Map<Long, BigDecimal> userProfile = userGenrePreferences.entrySet().stream()
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            e -> BigDecimal.valueOf(e.getValue())
-                    ));
-
-            Map<Long, BigDecimal> movieProfile = movieGenreProfile.entrySet().stream()
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            e -> BigDecimal.valueOf(e.getValue())
-                    ));
-
             // Calculate similarity between user preferences and movie genres
-            double similarity = similarityCalculator.calculateSimilarity(userProfile, movieProfile);
+            double similarity = similarityCalculator.calculateSimilarity(userGenrePreferences, movieGenreProfile);
 
             // Scale similarity to 1-10 rating range
             double predictedRating = 5.0 + (similarity * 5.0);
