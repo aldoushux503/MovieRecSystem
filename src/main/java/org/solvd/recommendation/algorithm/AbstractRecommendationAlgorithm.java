@@ -5,13 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.solvd.recommendation.model.Movie;
 import org.solvd.recommendation.model.User;
 import org.solvd.recommendation.model.UserRating;
-import org.solvd.recommendation.service.IMovieService;
-import org.solvd.recommendation.service.IUserRatingService;
-import org.solvd.recommendation.service.IUserService;
+import org.solvd.recommendation.model.ViewingHistory;
+import org.solvd.recommendation.service.*;
 import org.solvd.recommendation.service.imlp.MovieService;
 import org.solvd.recommendation.service.imlp.UserRatingService;
 import org.solvd.recommendation.service.imlp.UserService;
-import org.solvd.recommendation.service.ServiceFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,11 +42,14 @@ public abstract class AbstractRecommendationAlgorithm implements IRecommendation
     protected final IMovieService movieService;
     protected final IUserRatingService ratingService;
 
+    protected final IViewingHistoryService viewingHistoryService;
+
     protected AbstractRecommendationAlgorithm() {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         this.userService = serviceFactory.getUserService();
         this.movieService = serviceFactory.getMovieService();
         this.ratingService = serviceFactory.getUserRatingService();
+        this.viewingHistoryService = serviceFactory.getViewingHistoryService();
     }
 
     @Override
@@ -69,16 +70,24 @@ public abstract class AbstractRecommendationAlgorithm implements IRecommendation
         // Get all movies
         List<Movie> allMovies = movieService.getAll();
 
-        // Get movies already rated by the user
+        // Get movies already rated  and watched by the user
         List<Long> ratedMovieIds = ratingService.getAllUserRatings(userId)
                 .stream()
                 .map(UserRating::getMovieId)
                 .toList();
 
+        List<Long> viewedMovieIds = viewingHistoryService.getUserViewingHistory(userId)
+                .stream()
+                .map(ViewingHistory::getMovieId)
+                .toList();
+
+
         // Filter out movies already rated
         List<Movie> candidateMovies = allMovies.stream()
-                .filter(movie -> !ratedMovieIds.contains(movie.getMovieId()))
+                .filter(movie -> !ratedMovieIds.contains(movie.getMovieId()) &&
+                        !viewedMovieIds.contains(movie.getMovieId()))
                 .toList();
+
 
         // Predict ratings for candidate movies
         Map<Long, Double> predictedRatings = predictRatings(userId,

@@ -17,29 +17,29 @@ import java.util.stream.Collectors;
 
 /**
  * Collaborative filtering recommendation algorithm implementation.
- *
+ * <p>
  * This algorithm recommends items based on user similarities, finding patterns in the community
  * behavior rather than content attributes. The core concept is: users who agreed in the past
  * will likely agree in the future.
- *
+ * <p>
  * The algorithm works in three main steps:
  * 1. Find similar users (neighbors) based on rating patterns
  * 2. Select top N most similar users as a neighborhood
  * 3. Predict ratings using weighted averages from this neighborhood
- *
+ * <p>
  * Example:
  * - User A rated movies: {Movie1: 8, Movie2: 6, Movie3: 9}
  * - User B rated movies: {Movie1: 7, Movie2: 6, Movie4: 8}
  * - User C rated movies: {Movie1: 3, Movie2: 2, Movie3: 4}
- *
+ * <p>
  * The algorithm might determine:
  * - Similarity(A,B) = 0.85 (high similarity)
  * - Similarity(A,C) = 0.2 (low similarity)
- *
+ * <p>
  * To predict User A's rating for Movie4:
  * - Use User B's rating weighted by similarity: 8 * 0.85 = 6.8
  * - Normalized by sum of similarities: 6.8 / 0.85 = 8
- *
+ * <p>
  * Thus the algorithm would predict User A would rate Movie4 as 8.
  */
 public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgorithm {
@@ -132,6 +132,11 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
 
     /**
      * Predicts a rating for a specific movie based on similar users' ratings.
+     * If similarity = 0.9 (high similarity) and userRating = 8.5,
+     * then 0.9 * 8.5 = 7.65 is added to weightedRatingSum.
+     * This reflects that this user’s opinion is highly relevant.
+     * Predicted Rating= ∑(similarity×rating)
+     *                     ∑∣+-similarity∣
      */
     private Double predictRating(Long movieId, Map<Long, Double> similarUsers,
                                  Map<Long, BigDecimal> targetUserRatings) {
@@ -158,6 +163,7 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
             double userRating = rating.getRatingValue().doubleValue();
             weightedRatingSum += similarity * userRating;
             weightSum += Math.abs(similarity);
+
         }
 
         // If no similar users rated this movie, can't predict
