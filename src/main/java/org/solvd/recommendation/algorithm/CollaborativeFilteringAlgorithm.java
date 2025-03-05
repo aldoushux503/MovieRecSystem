@@ -17,7 +17,30 @@ import java.util.stream.Collectors;
 
 /**
  * Collaborative filtering recommendation algorithm implementation.
- * This algorithm recommends items based on similar users' preferences.
+ *
+ * This algorithm recommends items based on user similarities, finding patterns in the community
+ * behavior rather than content attributes. The core concept is: users who agreed in the past
+ * will likely agree in the future.
+ *
+ * The algorithm works in three main steps:
+ * 1. Find similar users (neighbors) based on rating patterns
+ * 2. Select top N most similar users as a neighborhood
+ * 3. Predict ratings using weighted averages from this neighborhood
+ *
+ * Example:
+ * - User A rated movies: {Movie1: 8, Movie2: 6, Movie3: 9}
+ * - User B rated movies: {Movie1: 7, Movie2: 6, Movie4: 8}
+ * - User C rated movies: {Movie1: 3, Movie2: 2, Movie3: 4}
+ *
+ * The algorithm might determine:
+ * - Similarity(A,B) = 0.85 (high similarity)
+ * - Similarity(A,C) = 0.2 (low similarity)
+ *
+ * To predict User A's rating for Movie4:
+ * - Use User B's rating weighted by similarity: 8 * 0.85 = 6.8
+ * - Normalized by sum of similarities: 6.8 / 0.85 = 8
+ *
+ * Thus the algorithm would predict User A would rate Movie4 as 8.
  */
 public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgorithm {
     private static final Logger logger = LoggerFactory.getLogger(CollaborativeFilteringAlgorithm.class);
@@ -26,7 +49,6 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
 
     private final ISimilarityCalculator similarityCalculator;
     private final int neighborCount;
-    private final IViewingHistoryService viewingHistoryService;
 
     public CollaborativeFilteringAlgorithm() {
         this(SimilarityMethod.PEARSON, DEFAULT_NEIGHBOR_COUNT);
@@ -36,7 +58,6 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
         super();
         this.similarityCalculator = SimilarityCalculatorFactory.createCalculator(similarityMethod);
         this.neighborCount = neighborCount;
-        this.viewingHistoryService = ServiceFactory.getInstance().getViewingHistoryService();
         logger.info("Initialized collaborative filtering with {} similarity and {} neighbors",
                 similarityMethod, neighborCount);
     }

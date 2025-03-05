@@ -18,11 +18,28 @@ import java.util.stream.Collectors;
 
 /**
  * Abstract base class for recommendation algorithms.
- * Provides common functionality and template methods.
+ *
+ * This class implements the template method pattern, providing common functionality
+ * that all recommendation algorithms share while allowing specific implementations
+ * to define their own rating prediction strategy.
+ *
+ * Key responsibilities:
+ * 1. Manages common services used by all recommendation algorithms
+ * 2. Implements the standard recommendation workflow
+ * 3. Defines the template method (predictRatings) for specific algorithms to implement
+ *
+ * The recommendation process follows these steps:
+ * 1. Validate input parameters
+ * 2. Retrieve all available movies
+ * 3. Filter out movies already rated by the user
+ * 4. Predict ratings for candidate movies using algorithm-specific logic
+ * 5. Sort by predicted rating and return the top N recommendations
+ *
+ * Example usage:
+ * IRecommendationAlgorithm algorithm = new CollaborativeFilteringAlgorithm();
+ * List<Movie> recommendations = algorithm.recommendMovies(userId, 10);
  */
 public abstract class AbstractRecommendationAlgorithm implements IRecommendationAlgorithm {
-    private static final Logger logger = LoggerFactory.getLogger(AbstractRecommendationAlgorithm.class);
-
     protected final IUserService userService;
     protected final IMovieService movieService;
     protected final IUserRatingService ratingService;

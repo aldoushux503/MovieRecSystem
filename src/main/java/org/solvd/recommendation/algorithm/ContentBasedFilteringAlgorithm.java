@@ -19,15 +19,33 @@ import java.util.stream.Collectors;
 
 /**
  * Content-based filtering algorithm implementation.
- * This algorithm recommends items based on similarities between item attributes
- * and user preferences, particularly focusing on genre preferences.
+ *
+ * This algorithm recommends items based on their features and user preferences,
+ * rather than community behavior. It creates a profile for each user based on
+ * item attributes they've previously liked, then matches new items to that profile.
+ *
+ * The algorithm works in three main steps:
+ * 1. Build a user profile from their rating history and item attributes (genres)
+ * 2. Create a feature profile for each candidate movie
+ * 3. Calculate similarity between user profile and item profiles to predict ratings
+ *
+ * Example:
+ * - User A highly rates sci-fi movies (ratings 8-10) and dislikes comedies (ratings 1-3)
+ * - User A's genre profile: {Sci-Fi: 0.8, Action: 0.5, Comedy: -0.7, ...}
+ * - Movie X's genre profile: {Sci-Fi: 0.6, Action: 0.4}
+ * - Similarity calculation: high match with user preferences
+ * - Predicted rating: 8.5 (scaled from similarity score)
+ *
+ * Advantages:
+ * - Works for new/unpopular items with no ratings (solves cold-start problem)
+ * - Highly personalized and doesn't depend on other users
+ * - Can provide explainable recommendations
  */
 public class ContentBasedFilteringAlgorithm extends AbstractRecommendationAlgorithm {
     private static final Logger logger = LoggerFactory.getLogger(ContentBasedFilteringAlgorithm.class);
     private static final double RATING_THRESHOLD = 7.0; // Consider movies rated 7+ as liked
 
     private final IMovieGenreService movieGenreService;
-    private final IGenreService genreService;
     private final ISimilarityCalculator similarityCalculator;
 
     public ContentBasedFilteringAlgorithm() {
@@ -38,7 +56,6 @@ public class ContentBasedFilteringAlgorithm extends AbstractRecommendationAlgori
         super();
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         this.movieGenreService = serviceFactory.getMovieGenreService();
-        this.genreService = serviceFactory.getGenreService();
         this.similarityCalculator = SimilarityCalculatorFactory.createCalculator(similarityMethod);
         logger.info("Initialized content-based filtering with {} similarity", similarityMethod);
     }
