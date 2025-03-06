@@ -25,7 +25,7 @@ public class CosineSimilarityCalculator implements ISimilarityCalculator {
     private static final Logger logger = LoggerFactory.getLogger(CosineSimilarityCalculator.class);
 
     @Override
-    public double calculateSimilarity(Map<Long, BigDecimal> vector1, Map<Long, BigDecimal> vector2) {
+    public double calculateSimilarity(Map<Long, Double> vector1, Map<Long, Double> vector2) {
         // Check if either vector is empty
         if (vector1.isEmpty() || vector2.isEmpty()) {
             logger.debug("One or both vectors are empty, returning similarity of 0.0");
@@ -36,34 +36,33 @@ public class CosineSimilarityCalculator implements ISimilarityCalculator {
         Set<Long> allKeys = new HashSet<>(vector1.keySet());
         allKeys.addAll(vector2.keySet());
 
-        // Initialize accumulators with BigDecimal
-        BigDecimal dotProduct = BigDecimal.ZERO;  // Dot product of the vectors
-        BigDecimal magnitude1 = BigDecimal.ZERO;  // Squared magnitude of vector1
-        BigDecimal magnitude2 = BigDecimal.ZERO;  // Squared magnitude of vector2
+        // Initialize accumulators
+        double dotProduct = 0.0;  // Dot product of the vectors
+        double magnitude1 = 0.0;  // Squared magnitude of vector1
+        double magnitude2 = 0.0;  // Squared magnitude of vector2
 
         // Calculate dot product and squared magnitudes
         for (Long key : allKeys) {
-            BigDecimal val1 = vector1.getOrDefault(key, BigDecimal.ZERO);  // Default to 0 if key not present
-            BigDecimal val2 = vector2.getOrDefault(key, BigDecimal.ZERO);  // Default to 0 if key not present
+            double val1 = vector1.getOrDefault(key, 0.0);  // Default to 0 if key not present
+            double val2 = vector2.getOrDefault(key, 0.0);  // Default to 0 if key not present
 
-            dotProduct = dotProduct.add(val1.multiply(val2));  // Accumulate dot product
-            magnitude1 = magnitude1.add(val1.multiply(val1));  // Accumulate squared magnitude for vector1
-            magnitude2 = magnitude2.add(val2.multiply(val2));  // Accumulate squared magnitude for vector2
+            dotProduct += val1 * val2;  // Accumulate dot product
+            magnitude1 += val1 * val1;  // Accumulate squared magnitude for vector1
+            magnitude2 += val2 * val2;  // Accumulate squared magnitude for vector2
         }
 
         // Calculate square roots of magnitudes
-        BigDecimal magnitude1Sqrt = magnitude1.sqrt(MathContext.DECIMAL64);  // Square root of magnitude1
-        BigDecimal magnitude2Sqrt = magnitude2.sqrt(MathContext.DECIMAL64);  // Square root of magnitude2
+        double magnitude1Sqrt = Math.sqrt(magnitude1);  // Square root of magnitude1
+        double magnitude2Sqrt = Math.sqrt(magnitude2);  // Square root of magnitude2
 
-        // Check if either magnitude is zero or negative
-        if (magnitude1Sqrt.compareTo(BigDecimal.ZERO) <= 0 || magnitude2Sqrt.compareTo(BigDecimal.ZERO) <= 0) {
+        // Check if either magnitude is zero
+        if (magnitude1Sqrt <= 0.0 || magnitude2Sqrt <= 0.0) {
             logger.debug("One or both vector magnitudes are zero, returning similarity of 0.0");
             return 0.0;
         }
 
         // Calculate cosine similarity
-        BigDecimal denominator = magnitude1Sqrt.multiply(magnitude2Sqrt);  // Product of magnitudes
-        BigDecimal similarity = dotProduct.divide(denominator, MathContext.DECIMAL64);  // Final similarity value
-        return similarity.doubleValue();  // Convert BigDecimal to double for return
+        double denominator = magnitude1Sqrt * magnitude2Sqrt;  // Product of magnitudes
+        return dotProduct / denominator;  // Final similarity value
     }
 }
