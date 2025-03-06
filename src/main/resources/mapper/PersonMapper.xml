@@ -8,25 +8,9 @@
         <result property="fullName" column="full_name"/>
         <result property="gender" column="gender"/>
     </resultMap>
-
-    <select id="get" resultMap="PersonResultMap">
-        SELECT * FROM Person WHERE person_id = #{id}
-    </select>
-
-    <insert id="save" useGeneratedKeys="true" keyProperty="personId">
-        INSERT INTO Person (full_name, gender) VALUES (#{fullName}, #{gender})
-    </insert>
-
-    <update id="update">
-        UPDATE Person SET full_name = #{fullName}, gender = #{gender} WHERE person_id = #{personId}
-    </update>
-
-    <delete id="delete">
-        DELETE FROM Person WHERE person_id = #{personId}
-    </delete>
-
-    <select id="getAll" resultMap="PersonResultMap">
-        SELECT * FROM Person
-    </select>
-
+    <select id="get" resultMap="PersonResultMap">SELECT * FROM Person WHERE person_id = #{id}</select>
+    <insert id="save" useGeneratedKeys="true" keyProperty="personId">INSERT INTO Person (full_name, gender) VALUES (#{fullName}, #{gender})</insert>
+    <update id="update">UPDATE Person SET full_name = #{fullName}, gender = #{gender} WHERE person_id = #{personId}</update>
+    <delete id="delete">DELETE FROM Person WHERE person_id = #{personId}</delete>
+    <select id="getAll" resultMap="PersonResultMap">SELECT * FROM Person</select>
 </mapper>

@@ -8,21 +8,8 @@
         <id property="userId" column="User_user_id"/>
         <id property="interactionId" column="interactions_id"/>
     </resultMap>
-
-
-    <select id="get" resultMap="UserInteractionsResultMap">
-        SELECT * FROM UserInteractions WHERE Movie_movie_id = #{movieId} AND User_user_id = #{userId} AND interactions_id = #{interactionId}
-    </select>
-
-    <insert id="save">
-        INSERT INTO UserInteractions (Movie_movie_id, User_user_id, interactions_id) VALUES (#{movieId}, #{userId}, #{interactionId})
-    </insert>
-
-    <delete id="delete">
-        DELETE FROM UserInteractions WHERE Movie_movie_id = #{movieId} AND User_user_id = #{userId} AND interactions_id = #{interactionId}
-    </delete>
-
-    <select id="getAll" resultMap="UserInteractionsResultMap">
-        SELECT * FROM UserInteractions
-    </select>
+    <select id="get" resultMap="UserInteractionsResultMap">SELECT * FROM UserInteractions WHERE Movie_movie_id = #{movieId} AND User_user_id = #{userId} AND interactions_id = #{interactionId}</select>
+    <insert id="save">INSERT INTO UserInteractions (Movie_movie_id, User_user_id, interactions_id) VALUES (#{movieId}, #{userId}, #{interactionId})</insert>
+    <delete id="delete">DELETE FROM UserInteractions WHERE Movie_movie_id = #{movieId} AND User_user_id = #{userId} AND interactions_id = #{interactionId}</delete>
+    <select id="getAll" resultMap="UserInteractionsResultMap">SELECT * FROM UserInteractions</select>
 </mapper>

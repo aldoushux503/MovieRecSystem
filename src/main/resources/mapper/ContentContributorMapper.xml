@@ -8,21 +8,8 @@
         <id property="personId" column="person_id"/>
         <id property="personRoleId" column="person_role_id"/>
     </resultMap>
-
-
-    <select id="get" resultMap="ContentContributorsResultMap">
-        SELECT * FROM Genre WHERE genre_id = #{id}
-    </select>
-
-    <insert id="save">
-        INSERT INTO ContentContributors (movie_id, person_id) VALUES (#{movieId}, #{personId})
-    </insert>
-
-    <delete id="delete">
-        DELETE FROM ContentContributors WHERE movie_id = #{movieId} AND person_id = #{personId}
-    </delete>
-
-    <select id="getAll" resultMap="ContentContributorsResultMap">
-        SELECT * FROM ContentContributors
-    </select>
+    <select id="get" resultMap="ContentContributorsResultMap">SELECT * FROM Genre WHERE genre_id = #{id}</select>
+    <insert id="save">INSERT INTO ContentContributors (movie_id, person_id) VALUES (#{movieId}, #{personId})</insert>
+    <delete id="delete">DELETE FROM ContentContributors WHERE movie_id = #{movieId} AND person_id = #{personId}</delete>
+    <select id="getAll" resultMap="ContentContributorsResultMap">SELECT * FROM ContentContributors</select>
 </mapper>

@@ -7,22 +7,8 @@
         <id property="personId" column="person_role_id"/>
         <id property="roleName" column="role_name"/>
     </resultMap>
-
-    <select id="get" resultMap="PersonRoleResultMap">
-        SELECT * FROM PersonRole WHERE person_role_id = #{id}
-    </select>
-
-    <insert id="save" useGeneratedKeys="true" keyProperty="personId">
-        INSERT INTO PersonRole (role_name) VALUES (#{roleName})
-    </insert>
-
-    <delete id="delete">
-        DELETE FROM PersonRole WHERE person_role_id = #{personId}
-    </delete>
-
-    <select id="getAll" resultMap="PersonRoleResultMap">
-    SELECT * FROM PersonRole
-    </select>
-
-
+    <select id="get" resultMap="PersonRoleResultMap">SELECT * FROM PersonRole WHERE person_role_id = #{id}</select>
+    <insert id="save" useGeneratedKeys="true" keyProperty="personId">INSERT INTO PersonRole (role_name) VALUES (#{roleName})</insert>
+    <delete id="delete">DELETE FROM PersonRole WHERE person_role_id = #{personId}</delete>
+    <select id="getAll" resultMap="PersonRoleResultMap">SELECT * FROM PersonRole</select>
 </mapper>

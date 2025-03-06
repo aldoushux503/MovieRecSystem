@@ -7,24 +7,9 @@
         <id property="genreId" column="genre_id"/>
         <result property="name" column="name"/>
     </resultMap>
-
-    <select id="get" resultMap="GenreResultMap">
-        SELECT * FROM Genre WHERE genre_id = #{id}
-    </select>
-
-    <insert id="save" useGeneratedKeys="true" keyProperty="genreId">
-        INSERT INTO Genre (name) VALUES (#{name})
-    </insert>
-
-    <update id="update">
-        UPDATE Genre SET name = #{name} WHERE genre_id = #{genreId}
-    </update>
-
-    <delete id="delete">
-        DELETE FROM Genre WHERE genre_id = #{id}
-    </delete>
-
-    <select id="getAll" resultMap="GenreResultMap">
-        SELECT * FROM Genre
-    </select>
+    <select id="get" resultMap="GenreResultMap">SELECT * FROM Genre WHERE genre_id = #{id}</select>
+    <insert id="save" useGeneratedKeys="true" keyProperty="genreId">INSERT INTO Genre (name) VALUES (#{name})</insert>
+    <update id="update">UPDATE Genre SET name = #{name} WHERE genre_id = #{genreId}</update>
+    <delete id="delete">DELETE FROM Genre WHERE genre_id = #{id}</delete>
+    <select id="getAll" resultMap="GenreResultMap">SELECT * FROM Genre</select>
 </mapper>

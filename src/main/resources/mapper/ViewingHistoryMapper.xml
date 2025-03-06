@@ -3,31 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.solvd.recommendation.mapper.IViewingHistoryMapper">
-
     <resultMap id="ViewingHistoryResultMap" type="org.solvd.recommendation.model.ViewingHistory">
         <id property="userId" column="user_id"/>
         <id property="movieId" column="movie_id"/>
         <result property="watchDate" column="watch_date"/>
     </resultMap>
-
-    <select id="get" resultMap="ViewingHistoryResultMap">
-        SELECT * FROM ViewingHistory WHERE movie_id = #{movieId} AND user_id = #{userId}
-    </select>
-
-    <insert id="save">
-        INSERT INTO ViewingHistory (user_id, movie_id, watch_date)
-        VALUES (#{userId}, #{movieId}, #{watchDate})
-    </insert>
-
-    <update id="update">
-        UPDATE ViewingHistory SET watch_date = #{watchDate} WHERE movie_id =#{movieId} AND user_id = #{userId}
-    </update>
-
-    <delete id="delete">
-        DELETE FROM ViewingHistory WHERE user_id = #{userId} AND movie_id = #{movieId}
-    </delete>
-
-    <select id="getAll" resultMap="ViewingHistoryResultMap">
-        SELECT * FROM ViewingHistory
-    </select>
+    <select id="get" resultMap="ViewingHistoryResultMap">SELECT * FROM ViewingHistory WHERE movie_id = #{movieId} AND user_id = #{userId}</select>
+    <insert id="save">INSERT INTO ViewingHistory (user_id, movie_id, watch_date)VALUES (#{userId}, #{movieId}, #{watchDate})</insert>
+    <update id="update">UPDATE ViewingHistory SET watch_date = #{watchDate} WHERE movie_id =#{movieId} AND user_id = #{userId}</update>
+    <delete id="delete">DELETE FROM ViewingHistory WHERE user_id = #{userId} AND movie_id = #{movieId}</delete>
+    <select id="getAll" resultMap="ViewingHistoryResultMap">SELECT * FROM ViewingHistory</select>
 </mapper>

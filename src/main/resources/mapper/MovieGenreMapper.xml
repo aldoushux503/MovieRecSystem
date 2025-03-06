@@ -7,24 +7,8 @@
         <id property="movieId" column="movie_id"/>
         <id property="genreId" column="genre_id"/>
     </resultMap>
-
-    <select id="get" resultMap="MovieGenresResultMap">
-        SELECT * FROM MovieGenres WHERE movie_id = #{movieId} AND genre_id = #{genreId}
-    </select>
-
-    <insert id="save">
-        INSERT INTO MovieGenres (movie_id, genre_id) VALUES (#{movieId}, #{genreId})
-    </insert>
-
-
-
-
-    <delete id="delete">
-        DELETE FROM MovieGenres WHERE movie_id = #{movieId} AND genre_id = #{genreId}
-    </delete>
-
-    <select id="getAll" resultMap="MovieGenresResultMap">
-        SELECT * FROM MovieGenres
-    </select>
-
+    <select id="get" resultMap="MovieGenresResultMap">SELECT * FROM MovieGenres WHERE movie_id = #{movieId} AND genre_id = #{genreId}</select>
+    <insert id="save">INSERT INTO MovieGenres (movie_id, genre_id) VALUES (#{movieId}, #{genreId})</insert>
+    <delete id="delete">DELETE FROM MovieGenres WHERE movie_id = #{movieId} AND genre_id = #{genreId}</delete>
+    <select id="getAll" resultMap="MovieGenresResultMap">SELECT * FROM MovieGenres</select>
 </mapper>

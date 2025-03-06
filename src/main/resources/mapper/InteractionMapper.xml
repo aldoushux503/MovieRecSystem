@@ -8,25 +8,9 @@
         <id property="id" column="interactions_id"/>
         <result property="type" column="type"/>
     </resultMap>
-
-    <select id="get" parameterType="long" resultMap="interactionResultMap">
-        SELECT * FROM Interaction WHERE interactions_id = #{interactionId}
-    </select>
-
-    <insert id="save" parameterType="org.solvd.recommendation.model.Interaction" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO Interaction (type) VALUES (#{type})
-    </insert>
-
-    <update id="update" parameterType="org.solvd.recommendation.model.Interaction">
-        UPDATE Interaction SET type = #{type} WHERE interactions_id = #{interactionId}
-    </update>
-
-    <delete id="delete" parameterType="long">
-        DELETE FROM Interaction WHERE interactions_id = #{interactionId}
-    </delete>
-
-    <select id="getAll" resultMap="interactionResultMap">
-        SELECT * FROM Interaction
-    </select>
-
+    <select id="get" parameterType="long" resultMap="interactionResultMap">SELECT * FROM Interaction WHERE interactions_id = #{interactionId}</select>
+    <insert id="save" parameterType="org.solvd.recommendation.model.Interaction" useGeneratedKeys="true" keyProperty="id">INSERT INTO Interaction (type) VALUES (#{type})</insert>
+    <update id="update" parameterType="org.solvd.recommendation.model.Interaction">UPDATE Interaction SET type = #{type} WHERE interactions_id = #{interactionId}</update>
+    <delete id="delete" parameterType="long">DELETE FROM Interaction WHERE interactions_id = #{interactionId}</delete>
+    <select id="getAll" resultMap="interactionResultMap">SELECT * FROM Interaction</select>
 </mapper>

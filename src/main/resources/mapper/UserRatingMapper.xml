@@ -8,24 +8,9 @@
         <id property="userId" column="user_id"/>
         <result property="ratingValue" column="rating_value"/>
     </resultMap>
-
-    <select id="get" resultMap="UserRatingResultMap">
-        SELECT * FROM UserRating WHERE movie_id = #{movieId} AND user_id = #{userId}
-    </select>
-
-    <update id="update">
-        UPDATE UserRating SET rating_value = #{ratingValue} WHERE movie_id =#{movieId} AND user_id = #{userId}
-    </update>
-
-    <insert id="save">
-        INSERT INTO UserRating (movie_id,user_id, rating_value) VALUES (#{movieId}, #{userId}, #{ratingValue})
-    </insert>
-
-    <delete id="delete">
-        DELETE FROM UserRating WHERE user_id = #{userId} AND movie_id = #{movieId}
-    </delete>
-
-    <select id="getAll" resultMap="UserRatingResultMap">
-        SELECT * FROM UserRating
-    </select>
+    <select id="get" resultMap="UserRatingResultMap">SELECT * FROM UserRating WHERE movie_id = #{movieId} AND user_id = #{userId}</select>
+    <update id="update">UPDATE UserRating SET rating_value = #{ratingValue} WHERE movie_id =#{movieId} AND user_id = #{userId}</update>
+    <insert id="save">INSERT INTO UserRating (movie_id,user_id, rating_value) VALUES (#{movieId}, #{userId}, #{ratingValue})</insert>
+    <delete id="delete">DELETE FROM UserRating WHERE user_id = #{userId} AND movie_id = #{movieId}</delete>
+    <select id="getAll" resultMap="UserRatingResultMap">SELECT * FROM UserRating</select>
 </mapper>
