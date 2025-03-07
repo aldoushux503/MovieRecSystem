@@ -108,19 +108,6 @@ public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorit
             }
         }
 
-        // Handle cold start (new users with few ratings)
-        if (isNewUser(userId) && !contentBasedPredictions.isEmpty()) {
-            logger.info("Adapting for new user {}: increasing content-based weight", userId);
-
-            // For new users, overwrite with content-based predictions for better cold start handling
-            for (Map.Entry<Long, Double> entry : contentBasedPredictions.entrySet()) {
-                Long movieId = entry.getKey();
-                if (!hybridPredictions.containsKey(movieId)) {
-                    hybridPredictions.put(movieId, entry.getValue());
-                }
-            }
-        }
-
         return hybridPredictions;
     }
 

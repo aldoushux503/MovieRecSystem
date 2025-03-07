@@ -28,13 +28,13 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
     private static final double SIMILARITY_THRESHOLD = 0.1;
 
     // Simplified weighting scheme with reduced interaction influence
-    private static final double RATING_SIMILARITY_WEIGHT = 0.8;  // Increased from 0.7
-    private static final double INTERACTION_SIMILARITY_WEIGHT = 0.2;  // Decreased from 0.3
+    private static final double RATING_SIMILARITY_WEIGHT = 0.8;
+    private static final double INTERACTION_SIMILARITY_WEIGHT = 0.2;
 
     // Simplified implicit rating values (only for significant types)
-    private static final double FAVORITE_IMPLICIT_RATING = 8.0;  // Was 9.0
-    private static final double LIKE_IMPLICIT_RATING = 7.0;      // Was 7.5
-    private static final double DISLIKE_IMPLICIT_RATING = 3.0;   // Was 2.5
+    private static final double FAVORITE_IMPLICIT_RATING = 8.0;
+    private static final double LIKE_IMPLICIT_RATING = 7.0;
+    private static final double DISLIKE_IMPLICIT_RATING = 3.0;
 
     private final ISimilarityCalculator similarityCalculator;
     private final int neighborCount;
@@ -199,6 +199,12 @@ public class CollaborativeFilteringAlgorithm extends AbstractRecommendationAlgor
 
     /**
      * Predicts a rating for a specific movie based on similar users' ratings and interactions.
+     * The formula used is:
+     * predictedRating = Σ(similarity_u * rating_u) / Σ|similarity_u|
+     * where:
+     * - u is a user in the set of similar users who rated the movie
+     * - similarity_u is the similarity score between the target user and user u
+     * - rating_u is the rating given by user u for the movie
      */
     private Double predictRating(Long movieId, Map<Long, Double> similarUsers,
                                  Map<Long, Double> targetUserRatings) {

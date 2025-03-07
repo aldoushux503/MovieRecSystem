@@ -6,6 +6,7 @@ import org.solvd.recommendation.model.*;
 import org.solvd.recommendation.service.*;
 import org.solvd.recommendation.service.facade.IRecommendationServiceFacade;
 import org.solvd.recommendation.service.facade.RecommendationServiceFacadeImpl;
+import org.solvd.recommendation.util.DatabaseInitializer;
 
 import java.util.*;
 import java.util.function.Consumer;

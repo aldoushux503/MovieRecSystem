@@ -11,8 +11,30 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
 /**
- * Content-based filtering algorithm implementation enhanced with user interaction support.
+ * Content-based filtering algorithm implementation.
+ *</p>
+ * This algorithm recommends items based on their features and user preferences,
+ * rather than community behavior. It creates a profile for each user based on
+ * item attributes they've previously liked, then matches new items to that profile.
+ *</p>
+ * The algorithm works in three main steps:
+ * 1. Build a user profile from their rating history and item attributes (genres)
+ * 2. Create a feature profile for each candidate movie
+ * 3. Calculate similarity between user profile and item profiles to predict ratings
+ *</p>
+ * Example:
+ * - User A highly rates sci-fi movies (ratings 8-10) and dislikes comedies (ratings 1-3)
+ * - User A's genre profile: {Sci-Fi: 0.8, Action: 0.5, Comedy: -0.7, ...}
+ * - Movie X's genre profile: {Sci-Fi: 0.6, Action: 0.4}
+ * - Similarity calculation: high match with user preferences
+ * - Predicted rating: 8.5 (scaled from similarity score)
+ *</p>
+ * Advantages:
+ * - Works for new/unpopular items with no ratings (solves cold-start problem)
+ * - Highly personalized and doesn't depend on other users
+ * - Can provide explainable recommendations
  */
 public class ContentBasedFilteringAlgorithm extends AbstractRecommendationAlgorithm {
     private static final Logger logger = LoggerFactory.getLogger(ContentBasedFilteringAlgorithm.class);
@@ -62,7 +84,6 @@ public class ContentBasedFilteringAlgorithm extends AbstractRecommendationAlgori
 
         // Process ratings
         processUserPreferences(
-                userId,
                 ratingService.getAllUserRatings(userId),
                 UserRating::getMovieId,
                 rating -> (rating.getRatingValue().doubleValue() - RATING_THRESHOLD) / 5.0,
@@ -72,7 +93,6 @@ public class ContentBasedFilteringAlgorithm extends AbstractRecommendationAlgori
 
         // Process interactions
         processUserPreferences(
-                userId,
                 userInteractionService.getByUser(userId),
                 UserInteraction::getMovieId,
                 interaction -> getInteractionWeight(interaction.getInteractionsId()),
@@ -93,7 +113,6 @@ public class ContentBasedFilteringAlgorithm extends AbstractRecommendationAlgori
      * Generic method to process user preferences (either ratings or interactions)
      */
     private <T> void processUserPreferences(
-            Long userId,
             List<T> items,
             Function<T, Long> movieIdExtractor,
             Function<T, Double> weightCalculator,
