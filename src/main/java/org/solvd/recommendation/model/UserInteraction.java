@@ -9,5 +9,5 @@ import lombok.*;
 public class UserInteraction {
     private Long movieId;
     private Long userId;
-    private Long interactionId;
+    private Long interactionsId;
 }

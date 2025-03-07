@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.solvd.recommendation.model.*;
 import org.solvd.recommendation.service.*;
+import org.solvd.recommendation.service.facade.IRecommendationServiceFacade;
+import org.solvd.recommendation.service.facade.RecommendationServiceFacadeImpl;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -160,7 +162,7 @@ public class MovieRecommendation {
             case "johndoe": return "(Sci-Fi & Action Fan)";
             case "janesmith": return "(Drama & Romance Fan)";
             case "michaelmiller": return "(Sci-Fi Enthusiast)";
-            case "emmadavis": return "(Horror Fan)";
+            case "emmadavis": return "(Sci-Fi Fan)";
             default: return "";
         }
     }

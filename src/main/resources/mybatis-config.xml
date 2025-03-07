@@ -32,6 +32,7 @@
     <mappers>
         <mapper resource="mapper/GenreMapper.xml"/>
         <mapper resource="mapper/MovieMapper.xml"/>
+        <mapper resource="mapper/InteractionMapper.xml"/>
         <mapper resource="mapper/PersonMapper.xml"/>
         <mapper resource="mapper/UserMapper.xml"/>
         <mapper resource="mapper/MovieGenreMapper.xml"/>

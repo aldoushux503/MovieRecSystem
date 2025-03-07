@@ -31,6 +31,8 @@ public class DatabaseInitializer {
     private final IUserRatingService userRatingService;
     private final IMovieGenreService movieGenreService;
     private final IViewingHistoryService viewingHistoryService;
+    private final IInteractionService interactionService;
+    private final IUserInteractionService userInteractionService;
 
     // Thread-safe maps to store entity IDs for reference
     private final Map<String, Long> movieIds = new ConcurrentHashMap<>();
@@ -38,6 +40,7 @@ public class DatabaseInitializer {
     private final Map<String, Long> genreIds = new ConcurrentHashMap<>();
     private final Map<String, Long> personIds = new ConcurrentHashMap<>();
     private final Map<String, Long> roleIds = new ConcurrentHashMap<>();
+    private final Map<String, Long> interactionIds = new ConcurrentHashMap<>();
 
     // Random number generator for timestamps
     private final Random random = new Random();
@@ -55,6 +58,8 @@ public class DatabaseInitializer {
         this.userRatingService = serviceFactory.getUserRatingService();
         this.movieGenreService = serviceFactory.getMovieGenreService();
         this.viewingHistoryService = serviceFactory.getViewingHistoryService();
+        this.interactionService = serviceFactory.getInteractionService();
+        this.userInteractionService = serviceFactory.getUserInteractionService();
     }
 
     /**
@@ -70,6 +75,8 @@ public class DatabaseInitializer {
             executeInitializationStep("movie-genre associations", this::associateMoviesWithGenres);
             executeInitializationStep("user ratings", this::createUserRatings);
             executeInitializationStep("viewing history", this::createViewingHistory);
+            executeInitializationStep("interactions", this::createInteractions);
+            executeInitializationStep("user interactions", this::createUserInteractions);
 
             logger.info("Sample data initialization completed successfully");
         } catch (Exception e) {
@@ -202,6 +209,126 @@ public class DatabaseInitializer {
             logger.error("Error creating person roles: {}", e.getMessage(), e);
             // Continue execution despite the error - this is just sample data
             logger.info("Continuing with hardcoded role IDs");
+        }
+    }
+
+    /**
+     * Create interaction types.
+     */
+    private void createInteractions() {
+        createEntity(
+                "WATCH",
+                InteractionType.WATCH,
+                type -> Interaction.builder().type(type).build(),
+                interaction -> {
+                    Long id = interactionService.create(interaction);
+                    interaction.setInteractionId(id);
+                    return id;
+                },
+                interactionIds
+        );
+
+        createEntity(
+                "LIKE",
+                InteractionType.LIKE,
+                type -> Interaction.builder().type(type).build(),
+                interaction -> {
+                    Long id = interactionService.create(interaction);
+                    interaction.setInteractionId(id);
+                    return id;
+                },
+                interactionIds
+        );
+
+        createEntity(
+                "DISLIKE",
+                InteractionType.DISLIKE,
+                type -> Interaction.builder().type(type).build(),
+                interaction -> {
+                    Long id = interactionService.create(interaction);
+                    interaction.setInteractionId(id);
+                    return id;
+                },
+                interactionIds
+        );
+
+        createEntity(
+                "FAVORITE",
+                InteractionType.FAVORITE,
+                type -> Interaction.builder().type(type).build(),
+                interaction -> {
+                    Long id = interactionService.create(interaction);
+                    interaction.setInteractionId(id);
+                    return id;
+                },
+                interactionIds
+        );
+
+        logger.info("Interaction types created with IDs: {}", interactionIds);
+    }
+
+    /**
+     * Create user interactions.
+     */
+    private void createUserInteractions() {
+        // John likes The Matrix and Inception
+        createUserInteraction("johndoe", "TheMatrix", "LIKE");
+        createUserInteraction("johndoe", "Inception", "LIKE");
+        createUserInteraction("johndoe", "TheDarkKnight", "FAVORITE");
+
+        // Jane likes dramas
+        createUserInteraction("janesmith", "ShawshankRedemption", "LIKE");
+        createUserInteraction("janesmith", "ForrestGump", "FAVORITE");
+        createUserInteraction("janesmith", "TheMatrix", "DISLIKE");
+
+        // Bob likes thrillers but dislikes one
+        createUserInteraction("bobjohnson", "Alien", "LIKE");
+        createUserInteraction("bobjohnson", "TheDarkKnight", "FAVORITE");
+        createUserInteraction("bobjohnson", "Titanic", "DISLIKE");
+
+        // Alice has mixed preferences
+        createUserInteraction("alicewilliams", "Inception", "LIKE");
+        createUserInteraction("alicewilliams", "Titanic", "FAVORITE");
+        createUserInteraction("alicewilliams", "TheAvengers", "DISLIKE");
+
+        // David likes classics
+        createUserInteraction("davidbrown", "ShawshankRedemption", "FAVORITE");
+        createUserInteraction("davidbrown", "TheGodfather", "LIKE");
+
+        // Emma likes horror
+        createUserInteraction("emmadavis", "Alien", "FAVORITE");
+        createUserInteraction("emmadavis", "Jaws", "LIKE");
+
+        // Michael is sci-fi enthusiast
+        createUserInteraction("michaelmiller", "TheMatrix", "FAVORITE");
+        createUserInteraction("michaelmiller", "Inception", "LIKE");
+        createUserInteraction("michaelmiller", "Interstellar", "LIKE");
+
+        // Other users
+        createUserInteraction("oliviawilson", "TheDarkKnight", "LIKE");
+        createUserInteraction("jamestaylor", "TheGodfather", "FAVORITE");
+        createUserInteraction("sophiaanderson", "Titanic", "LIKE");
+    }
+
+    /**
+     * Helper method to create user interaction.
+     */
+    private void createUserInteraction(String username, String movieKey, String interactionType) {
+        try {
+            UserInteraction interaction = UserInteraction.builder()
+                    .userId(userIds.get(username))
+                    .movieId(movieIds.get(movieKey))
+                    .interactionsId(interactionIds.get(interactionType))
+                    .build();
+
+            interactionService.addUserInteraction(interaction);
+
+            logger.debug("Created user interaction: user={}, movie={}, interaction={}",
+                    username, movieKey, interactionType);
+        } catch (Exception e) {
+            logger.error("Error creating user interaction for user {} on movie {}: {}",
+                    username, movieKey, e.getMessage(), e);
+            // Continue execution - this is not critical for demo
         }
     }
 

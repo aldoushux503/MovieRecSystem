@@ -5,47 +5,19 @@ import org.slf4j.LoggerFactory;
 import org.solvd.recommendation.algorithm.similarity.ISimilarityCalculator;
 import org.solvd.recommendation.algorithm.similarity.SimilarityCalculatorFactory;
 import org.solvd.recommendation.algorithm.similarity.SimilarityMethod;
-import org.solvd.recommendation.model.MovieGenres;
-import org.solvd.recommendation.model.UserRating;
-import org.solvd.recommendation.service.IGenreService;
-import org.solvd.recommendation.service.IMovieGenreService;
-import org.solvd.recommendation.service.imlp.GenreService;
-import org.solvd.recommendation.service.imlp.MovieGenreService;
-import org.solvd.recommendation.service.ServiceFactory;
+import org.solvd.recommendation.model.*;
 
-import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Content-based filtering algorithm implementation.
- *
- * This algorithm recommends items based on their features and user preferences,
- * rather than community behavior. It creates a profile for each user based on
- * item attributes they've previously liked, then matches new items to that profile.
- *
- * The algorithm works in three main steps:
- * 1. Build a user profile from their rating history and item attributes (genres)
- * 2. Create a feature profile for each candidate movie
- * 3. Calculate similarity between user profile and item profiles to predict ratings
- *
- * Example:
- * - User A highly rates sci-fi movies (ratings 8-10) and dislikes comedies (ratings 1-3)
- * - User A's genre profile: {Sci-Fi: 0.8, Action: 0.5, Comedy: -0.7, ...}
- * - Movie X's genre profile: {Sci-Fi: 0.6, Action: 0.4}
- * - Similarity calculation: high match with user preferences
- * - Predicted rating: 8.5 (scaled from similarity score)
- *
- * Advantages:
- * - Works for new/unpopular items with no ratings (solves cold-start problem)
- * - Highly personalized and doesn't depend on other users
- * - Can provide explainable recommendations
+ * Content-based filtering algorithm implementation enhanced with user interaction support.
  */
 public class ContentBasedFilteringAlgorithm extends AbstractRecommendationAlgorithm {
     private static final Logger logger = LoggerFactory.getLogger(ContentBasedFilteringAlgorithm.class);
-    private static final double RATING_THRESHOLD = 7.0; // Consider movies rated 7+ as liked
+    private static final double RATING_THRESHOLD = 5.0;
 
-    private final IMovieGenreService movieGenreService;
     private final ISimilarityCalculator similarityCalculator;
 
     public ContentBasedFilteringAlgorithm() {
@@ -54,114 +26,138 @@ public class ContentBasedFilteringAlgorithm extends AbstractRecommendationAlgori
 
     public ContentBasedFilteringAlgorithm(SimilarityMethod similarityMethod) {
         super();
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        this.movieGenreService = serviceFactory.getMovieGenreService();
         this.similarityCalculator = SimilarityCalculatorFactory.createCalculator(similarityMethod);
         logger.info("Initialized content-based filtering with {} similarity", similarityMethod);
     }
 
     @Override
     public Map<Long, Double> predictRatings(Long userId, List<Long> movieIds) {
-        // Build user profile based on rated movies and their genres
         Map<Long, Double> userGenrePreferences = buildUserGenreProfile(userId);
 
-        // If no preferences found, return empty result
         if (userGenrePreferences.isEmpty()) {
             logger.warn("No genre preferences found for user {}", userId);
             return Collections.emptyMap();
         }
 
-        // Calculate predicted ratings for candidate movies
         Map<Long, Double> predictions = new HashMap<>();
         for (Long movieId : movieIds) {
-            // Get movie's genre profile
             Map<Long, Double> movieGenreProfile = getMovieGenreProfile(movieId);
 
-            // Skip movies with no genre information
-            if (movieGenreProfile.isEmpty()) {
-                continue;
-            }
+            if (movieGenreProfile.isEmpty()) continue;
 
-            // Calculate similarity between user preferences and movie genres
-            double similarity = similarityCalculator.calculateSimilarity(userGenrePreferences, movieGenreProfile);
+            double similarity = similarityCalculator.calculateSimilarity(
+                    userGenrePreferences, movieGenreProfile);
 
-            // Scale similarity to 1-10 rating range
-            double predictedRating = 5.0 + (similarity * 5.0);
-            // Ensure rating is within bounds
-            predictedRating = Math.max(1.0, Math.min(10.0, predictedRating));
-
+            // Scale similarity to 1-10 rating range and ensure it's within bounds
+            double predictedRating = Math.max(1.0, Math.min(10.0, 5.0 + (similarity * 5.0)));
             predictions.put(movieId, predictedRating);
         }
 
         return predictions;
     }
 
-    /**
-     * Builds a profile of user's genre preferences based on their rated movies.
-     * @return Map of genre IDs to preference weights
-     */
     private Map<Long, Double> buildUserGenreProfile(Long userId) {
-        // Get user's ratings
-        List<UserRating> userRatings = ratingService.getAllUserRatings(userId);
-
-        // If no ratings, return empty profile
-        if (userRatings.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
         Map<Long, Double> genreWeights = new HashMap<>();
         Map<Long, Integer> genreCounts = new HashMap<>();
 
-        // Calculate weights for each genre based on user's movie ratings
-        for (UserRating rating : userRatings) {
-            double ratingValue = rating.getRatingValue().doubleValue();
+        // Process ratings
+        processUserPreferences(
+                userId,
+                ratingService.getAllUserRatings(userId),
+                UserRating::getMovieId,
+                rating -> (rating.getRatingValue().doubleValue() - RATING_THRESHOLD) / 5.0,
+                genreWeights,
+                genreCounts
+        );
 
-            // Consider weight relative to rating threshold
-            double weight = (ratingValue - 5.0) / 5.0;  // Normalize to [-1,1] range
+        // Process interactions
+        processUserPreferences(
+                userId,
+                userInteractionService.getByUser(userId),
+                UserInteraction::getMovieId,
+                interaction -> getInteractionWeight(interaction.getInteractionsId()),
+                genreWeights,
+                genreCounts
+        );
 
-            // Get movie's genres
-            List<MovieGenres> movieGenres = movieGenreService.getByMovie(rating.getMovieId());
-
-            // Update weights for each genre
-            for (MovieGenres mg : movieGenres) {
-                Long genreId = mg.getGenreId();
-                genreWeights.put(genreId, genreWeights.getOrDefault(genreId, 0.0) + weight);
-                genreCounts.put(genreId, genreCounts.getOrDefault(genreId, 0) + 1);
-            }
-        }
-
-        // Normalize weights by genre occurrence count
-        Map<Long, Double> normalizedWeights = new HashMap<>();
-        for (Map.Entry<Long, Double> entry : genreWeights.entrySet()) {
-            Long genreId = entry.getKey();
-            Double weight = entry.getValue();
-            int count = genreCounts.get(genreId);
-            normalizedWeights.put(genreId, weight / count);
-        }
-
-        return normalizedWeights;
+        // Normalize weights
+        return genreWeights.entrySet().stream()
+                .filter(e -> genreCounts.containsKey(e.getKey()) && genreCounts.get(e.getKey()) > 0)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue() / genreCounts.get(e.getKey())
+                ));
     }
 
     /**
-     * Creates a genre profile for a movie.
-     * @return Map of genre IDs to profile weights
+     * Generic method to process user preferences (either ratings or interactions)
      */
+    private <T> void processUserPreferences(
+            Long userId,
+            List<T> items,
+            Function<T, Long> movieIdExtractor,
+            Function<T, Double> weightCalculator,
+            Map<Long, Double> genreWeights,
+            Map<Long, Integer> genreCounts) {
+
+        if (items.isEmpty()) return;
+
+        for (T item : items) {
+            double weight = weightCalculator.apply(item);
+            if (weight == 0.0) continue;
+
+            Long movieId = movieIdExtractor.apply(item);
+            for (MovieGenres mg : movieGenreService.getByMovie(movieId)) {
+                Long genreId = mg.getGenreId();
+                genreWeights.merge(genreId, weight, Double::sum);
+                genreCounts.merge(genreId, 1, Integer::sum);
+            }
+        }
+    }
+
+    /**
+     * Gets the preference weight for a given interaction ID.
+     */
+    private double getInteractionWeight(Long interactionId) {
+        if (interactionId == null) return 0.0;
+
+        // Get interaction from service
+        Interaction interaction = interactionService.getById(interactionId);
+        if (interaction == null) return 0.0;
+
+        // Return weight based on interaction type
+        String typeStr = String.valueOf(interaction.getType());
+        try {
+            InteractionType type = InteractionType.valueOf(typeStr);
+
+            return switch (type) {
+                case LIKE -> LIKE_WEIGHT;
+                case FAVORITE -> FAVORITE_WEIGHT;
+                case DISLIKE -> DISLIKE_WEIGHT;
+                case WATCH -> WATCH_WEIGHT;
+                default -> {
+                    logger.warn("Unhandled interaction type: {}", type);
+                    yield 0.0;
+                }
+            };
+        } catch (IllegalArgumentException e) {
+            logger.warn("Unknown interaction type: {}", typeStr);
+            return 0.0;
+        }
+    }
+
+
     private Map<Long, Double> getMovieGenreProfile(Long movieId) {
-        // Get movie's genres
         List<MovieGenres> movieGenres = movieGenreService.getByMovie(movieId);
 
-        // If no genres found, return empty profile
-        if (movieGenres.isEmpty()) {
-            return Collections.emptyMap();
-        }
+        if (movieGenres.isEmpty()) return Collections.emptyMap();
 
-        // Create a uniform distribution of weights across genres
         double weight = 1.0 / movieGenres.size();
-
         return movieGenres.stream()
                 .collect(Collectors.toMap(
                         MovieGenres::getGenreId,
-                        mg -> weight
+                        mg -> weight,
+                        (v1, v2) -> v1
                 ));
     }
 }

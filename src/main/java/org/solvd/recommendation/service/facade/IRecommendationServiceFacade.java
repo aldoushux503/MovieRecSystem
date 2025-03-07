@@ -1,4 +1,4 @@
-package org.solvd.recommendation;
+package org.solvd.recommendation.service.facade;
 
 import org.solvd.recommendation.model.Movie;
 

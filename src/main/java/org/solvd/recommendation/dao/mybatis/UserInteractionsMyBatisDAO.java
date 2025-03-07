@@ -97,10 +97,10 @@ public class UserInteractionsMyBatisDAO
     }
 
     private CompositeKey3<Long, Long, Long> createCompositeKey(UserInteraction entity) {
-        if (entity == null || entity.getUserId() == null || entity.getMovieId() == null || entity.getInteractionId() == null) {
+        if (entity == null || entity.getUserId() == null || entity.getMovieId() == null || entity.getInteractionsId() == null) {
             throw new IllegalArgumentException("UserInteraction has incomplete key values");
         }
-        return new CompositeKey3<>(entity.getUserId(), entity.getMovieId(), entity.getInteractionId());
+        return new CompositeKey3<>(entity.getUserId(), entity.getMovieId(), entity.getInteractionsId());
     }
 
     @Override

@@ -2,36 +2,41 @@ package org.solvd.recommendation.algorithm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.solvd.recommendation.algorithm.similarity.SimilarityMethod;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Hybrid recommendation algorithm implementation that combines
  * collaborative filtering and content-based filtering approaches.
  *
  * This algorithm addresses limitations of individual recommendation approaches by
- * blending their predictions with configurable weights. It enhances recommendation
- * quality by leveraging both community patterns and content features.
+ * blending their predictions with configurable weights. It now incorporates user
+ * interaction data to better adapt to each user's individual behavior patterns.
  *
- * Example scenario:
- * - New user with 2 ratings gets predictions where:
- *   - Collaborative predictions have limited accuracy due to sparse data
- *   - Content-based predictions work well based on the few explicit preferences
- *   - Hybrid algorithm increases content-based weight to 0.8 for better cold-start handling
- *
- * - For Movie1:
- *   - Collaborative predicted rating: 7.5 with weight 0.2 → 1.5
- *   - Content-based predicted rating: 8.0 with weight 0.8 → 6.4
- *   - Final hybrid rating: 7.9
+ * The algorithm dynamically adjusts its blending strategy based on:
+ * - New user detection (cold start): favors content-based approach
+ * - Interaction richness: adjusts weights based on user interaction patterns
+ * - Power user detection: favors collaborative filtering for users with many ratings
  */
 public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorithm {
     private static final Logger logger = LoggerFactory.getLogger(HybridRecommendationAlgorithm.class);
-    private static final int NEW_USER_THRESHOLD = 5;
+
+    // Thresholds for user behavior patterns
+    private static final int NEW_USER_THRESHOLD = 5;     // Users with fewer ratings are considered new
+    private static final int RICH_INTERACTION_THRESHOLD = 10;   // Users with more interactions have rich interaction data
+    private static final int POWER_USER_THRESHOLD = 20;         // Users with many ratings are power users
+
+    // Weight adjustment factors
+    private static final double COLD_START_ADJUSTMENT = 0.25;   // Increase content-based weight for new users
+    private static final double INTERACTION_ADJUSTMENT = 0.15;  // Adjust based on interaction richness
+    private static final double POWER_USER_ADJUSTMENT = 0.15;   // Increase collaborative weight for power users
 
     private final IRecommendationAlgorithm collaborativeAlgorithm;
     private final IRecommendationAlgorithm contentBasedAlgorithm;
-    private final double collaborativeWeight;
-    private final double contentBasedWeight;
+    private double collaborativeWeight;
+    private double contentBasedWeight;
 
     /**
      * Creates a hybrid algorithm with equal weighting.
@@ -42,9 +47,6 @@ public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorit
 
     /**
      * Creates a hybrid algorithm with specified weights.
-     *
-     * @param collaborativeWeight Weight for collaborative filtering results (0-1)
-     * @param contentBasedWeight Weight for content-based filtering results (0-1)
      */
     public HybridRecommendationAlgorithm(double collaborativeWeight, double contentBasedWeight) {
         super();
@@ -62,9 +64,21 @@ public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorit
 
     @Override
     public Map<Long, Double> predictRatings(Long userId, List<Long> movieIds) {
+        // Adapt weights based on user profile
+        double[] adjustedWeights = calculateAdaptiveWeights(userId);
+        double adjustedCollaborativeWeight = adjustedWeights[0];
+        double adjustedContentBasedWeight = adjustedWeights[1];
+
+        logger.info("User {}: adjusted weights to collaborative={}, content-based={}",
+                userId, adjustedCollaborativeWeight, adjustedContentBasedWeight);
+
         // Get predictions from both algorithms
         Map<Long, Double> collaborativePredictions = collaborativeAlgorithm.predictRatings(userId, movieIds);
         Map<Long, Double> contentBasedPredictions = contentBasedAlgorithm.predictRatings(userId, movieIds);
+
+        // Log the number of predictions from each algorithm
+        logger.debug("User {}: collaborative predictions={}, content-based predictions={}",
+                userId, collaborativePredictions.size(), contentBasedPredictions.size());
 
         // Combine predictions
         Map<Long, Double> hybridPredictions = new HashMap<>();
@@ -73,7 +87,7 @@ public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorit
         if (!collaborativePredictions.isEmpty()) {
             for (Map.Entry<Long, Double> entry : collaborativePredictions.entrySet()) {
                 Long movieId = entry.getKey();
-                Double rating = entry.getValue() * collaborativeWeight;
+                Double rating = entry.getValue() * adjustedCollaborativeWeight;
                 hybridPredictions.put(movieId, rating);
             }
         }
@@ -82,7 +96,7 @@ public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorit
         if (!contentBasedPredictions.isEmpty()) {
             for (Map.Entry<Long, Double> entry : contentBasedPredictions.entrySet()) {
                 Long movieId = entry.getKey();
-                Double contentRating = entry.getValue() * contentBasedWeight;
+                Double contentRating = entry.getValue() * adjustedContentBasedWeight;
 
                 // Add to existing prediction or set as new prediction
                 if (hybridPredictions.containsKey(movieId)) {
@@ -111,10 +125,54 @@ public class HybridRecommendationAlgorithm extends AbstractRecommendationAlgorit
     }
 
     /**
-     * Determines if a user is new to the system based on rating count.
+     * Determines if a user is new based on rating count.
      */
     private boolean isNewUser(Long userId) {
         int ratingCount = ratingService.getAllUserRatings(userId).size();
-        return ratingCount < NEW_USER_THRESHOLD; // Users with fewer than 5 ratings are considered new
+        return ratingCount < NEW_USER_THRESHOLD;
+    }
+
+    /**
+     * Calculates adaptive weights based on user profile analysis
+     * @return double array with [collaborativeWeight, contentBasedWeight]
+     */
+    private double[] calculateAdaptiveWeights(Long userId) {
+        // Get user profile data
+        int ratingCount = ratingService.getAllUserRatings(userId).size();
+        int interactionCount = userInteractionService.getByUser(userId).size();
+
+        // Start with base weights
+        double adjustedCollaborativeWeight = this.collaborativeWeight;
+        double adjustedContentBasedWeight = this.contentBasedWeight;
+
+        // Factor 1: Cold Start - New users get higher content-based weight
+        if (isNewUser(userId)) {
+            adjustedContentBasedWeight += COLD_START_ADJUSTMENT;
+            adjustedCollaborativeWeight -= COLD_START_ADJUSTMENT;
+            logger.debug("Cold start adjustment for user {}: +{} to content-based",
+                    userId, COLD_START_ADJUSTMENT);
+        }
+
+        // Factor 2: Interaction Richness - More interactions enhance collaborative filtering
+        if (interactionCount > RICH_INTERACTION_THRESHOLD) {
+            adjustedCollaborativeWeight += INTERACTION_ADJUSTMENT;
+            adjustedContentBasedWeight -= INTERACTION_ADJUSTMENT;
+            logger.debug("Interaction richness adjustment for user {}: +{} to collaborative",
+                    userId, INTERACTION_ADJUSTMENT);
+        }
+
+        // Factor 3: Power User - Users with many ratings benefit from collaborative filtering
+        if (ratingCount > POWER_USER_THRESHOLD) {
+            adjustedCollaborativeWeight += POWER_USER_ADJUSTMENT;
+            adjustedContentBasedWeight -= POWER_USER_ADJUSTMENT;
+            logger.debug("Power user adjustment for user {}: +{} to collaborative",
+                    userId, POWER_USER_ADJUSTMENT);
+        }
+
+        // Normalize to ensure weights are in valid range and sum to 1.0
+        adjustedCollaborativeWeight = Math.max(0.1, Math.min(0.9, adjustedCollaborativeWeight));
+        adjustedContentBasedWeight = 1.0 - adjustedCollaborativeWeight;
+
+        return new double[] {adjustedCollaborativeWeight, adjustedContentBasedWeight};
     }
 }
